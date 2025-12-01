@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
+        'role',
+        'group_id',
+        'prefecture_id',
+        'acquired_at',
     ];
 
     /**
@@ -41,8 +46,14 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'acquired_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relations. ユーザのグループidからグループ名などを取得する
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 }

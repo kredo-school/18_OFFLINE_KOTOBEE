@@ -1,0 +1,215 @@
+/* erase the html_body margin */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================
+   Navbar
+============================ */
+
+.kb-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(51, 51, 51, 0.7); /* #333333, 70% */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1000; /* 前面に表示 */
+}
+
+/* Logo */
+.kb-logo {
+    height: 40px;
+    width: auto;
+    margin-top: 5px;
+  }
+
+/* Center group name */
+.kb-group-name {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Avatar */
+.kb-avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 5px;
+
+}
+
+/* Avatar not exist */
+.kb-avatar-icon {
+    font-size: 38px;
+    color: white;
+}
+
+/* Hamburger Menu */
+.kb-hamburger {
+    font-size: 32px;
+    cursor: pointer;
+    color: black;
+    padding: 4px 8px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+}
+ 
+.kb-menu-list {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    margin-top: 10px;
+}
+
+.kb-menu-item {
+    display: block;
+    color: black;
+    text-decoration: none;
+    padding: 6px 0;
+}
+
+/* Layout areas */
+.kb-left, .kb-right, .kb-center {
+    display: flex;
+    align-items: center;
+}
+
+/* Center section expands */
+.kb-center {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* Body Background */
+.kb-main {
+    position: relative;
+    top: 60px; /* Navbar の高さ分だけ下げる */
+    height: calc(100vh - 60px); /* ここだけスクロール */
+    overflow-y: auto;
+    background-color: #FFFFCE;
+    /* width: 100%; */
+    padding: 16px;
+}
+
+/* Remove default triangle from <details> */
+.kb-details summary {
+    list-style: none;
+}
+
+.kb-details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* =====================================
+   Login Page Custom Design
+===================================== */
+
+/* 全体を中央寄せに */
+.login-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* "KotoBee" タイトル */
+.login-title {
+    color: #744805;
+    font-size: 42px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 90px;
+    margin-bottom: 40px;
+}
+
+/* Bee イラスト */
+.login-bee {
+    width: 300px;
+    margin-bottom: 1px;
+}
+
+/* 山の画像コンテナー */
+.login-mountain-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* 山の画像（横幅いっぱい） */
+.login-mountain {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* 山の上に浮かせるフォーム */
+.login-form-card {
+    position: absolute;
+    top: 20%;              /* 上から20%の位置に浮かせる（調整OK） */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFE693;
+    width: 300px;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* フォームタイトル */
+.login-form-title {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #744805;
+}
+
+/* button */
+.kb-login-btn {
+    background-color: #FFC653 !important; /* ボタン背景色 */
+    border: 2px solid #8B4513 !important; /* 茶色の縁（SaddleBrown） */
+    color: #000; /* 文字色（必要なら調整） */
+}
+
+.kb-login-btn:hover {
+    background-color: #e6b247 !important; /* 少し暗くしてホバー用 */
+    border-color: #8B4513 !important;
+}
+
+/* PC 画面用にデザイン切り替え */
+@media (min-width: 600) { /* 768px) { */
+
+    /* Login wrapper 全体を中央寄せ */
+    .login-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 80px; /* Navbar 60px + 余白 */
+    }
+
+    /* Bee の下に山を置くだけ（高さは維持） */
+    .login-mountain-wrapper {
+        position: relative;
+        width: 600px;   /* PC では横幅を制限する */
+        margin-top: 20px;
+    }
+
+    /* ★ ここがポイント：フォームの absolute を解除して通常配置にする */
+    .login-form-card {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-top: -80px;   /* 山に少し重ねる自然な位置（調整可能） */
+        width: 350px;        /* PC は少し幅広く */
+    }
+}
