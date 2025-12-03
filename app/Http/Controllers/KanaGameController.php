@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\GameSetting;
 use App\Models\KanaQuestion;
+use App\Models\GameResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class KanaGameController extends Controller
 {
@@ -35,6 +37,7 @@ class KanaGameController extends Controller
             'order_type'  => $setting->order_type,
             'sound_type'  => $setting->subtype,
             'questions'   => $questions,
+            'setting_id'  => $setting->id,  // ← 追加！ 12/1
         ]);
     }
 
@@ -112,5 +115,66 @@ class KanaGameController extends Controller
             $questions = $newQuestions;
         }
         return $questions;
+    }
+
+    /**
+     * ③ 結果保存
+     */
+    public function saveResult(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Login required'], 401);
+        }
+
+        $game_id = $request->game_id ?? 1;
+        $setting_id = $request->setting_id;
+
+        // ① スコア保存
+        GameResult::create([
+            'user_id' => $user->id,
+            'game_id' => $game_id,
+            'setting_id' => $setting_id,
+            'created_by_admin_id' => null,
+            'score' => $request->score,
+            'play_time' => null,
+        ]);
+
+        // ② setting_id & game_id 内での最高スコアランキング（ユーザーごと1件）
+        $top3 = GameResult::select('user_id', DB::raw('MAX(score) as max_score'))
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->groupBy('user_id')
+            ->orderBy('max_score', 'desc')
+            ->limit(3)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'name'  => $row->user->name ?? 'NoName',
+                    'score' => $row->max_score
+                ];
+            });
+
+        // ③ 自分の最高スコア
+        $myBest = GameResult::where('user_id', $user->id)
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->max('score');
+
+        // ④ 自分の順位（同じ条件でカウント）
+        $myRank = GameResult::select('user_id', DB::raw('MAX(score) as max_score'))
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->groupBy('user_id')
+            ->having('max_score', '>', $myBest)
+            ->count() + 1;
+
+        return response()->json([
+            'saved'    => true,
+            'top3'     => $top3,
+            'my_score' => $myBest,
+            'my_rank'  => $myRank
+        ]);
     }
 }

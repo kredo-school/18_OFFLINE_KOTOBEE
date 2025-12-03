@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-5">
+                <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
                     <input id="password" type="password" 
                         class="form-control @error('password') is-invalid @enderror"
@@ -61,6 +61,12 @@
                     </a>
                 @endif
 
+                {{-- register --}}
+                <div class="text-center mt-3">
+                    <a class="btn btn-link w-100 text-center" href="{{ route('register') }}">
+                        Create a new account
+                    </a>
+                </div>
             </form>
         </div>
     </div>

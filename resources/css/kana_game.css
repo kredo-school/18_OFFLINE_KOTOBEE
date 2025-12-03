@@ -94,7 +94,7 @@
   font-weight: bold;
 }
 
-/* モーダル */
+/* モーダルの背景（黒半透明） */
 .modal {
   display: none;
   position: fixed;
@@ -106,13 +106,85 @@
   background: rgba(0,0,0,0.7);
 }
 
-.modal-content {
-  background: white;
-  margin: 15% auto;
+/* モーダル本体 */
+#result-modal {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  background: #FFB728;           /* ★背景色（指定） */
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
+
+  border: 5px solid #B67A20;     /* ★太め枠線（指定） */
+
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  min-width: 380px;
+  max-width: 90%;
   text-align: center;
-  color: #fd0303;
-  width: 300px;
-  font-size: 1.5rem;
+}
+
+/* モーダルの文字カラー（黒に変更推奨：赤は背景と合わない） */
+#result-modal h2,
+#result-modal p {
+  color: #4A2800;  /* 背景 #FFB728 と相性の良い濃い茶色 */
+}
+
+/* 背景つき丸型のトロフィー */
+.trophy-bg {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+    background: white;        /* ★背景色 */
+
+    margin-right: 8px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.15);
+}
+
+.rank-line {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: #4A2800;            /* 読みやすい濃茶 */
+}
+
+.rank-line i {
+    font-size: 18px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.kb-btn-again,
+.kb-btn-back {
+    padding: 10px 20px;
+    background: #B67A20;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.kb-btn-again:hover,
+.kb-btn-back:hover {
+    opacity: 0.9;
+}
+
+.modal-close-btn {
+    margin-top: 15px;
+    background: transparent;
+    border: none;
+    color: #4A2800;
+    cursor: pointer;
+    font-size: 1rem;
 }

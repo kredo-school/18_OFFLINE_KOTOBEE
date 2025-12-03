@@ -11,6 +11,8 @@ class GameResult extends Model
         'game_id',
         'setting_id',
         'created_by_admin_id',
+        'vcab_stage_id',
+        'gram_stage_id',
         'score',
         'play_time',
     ];

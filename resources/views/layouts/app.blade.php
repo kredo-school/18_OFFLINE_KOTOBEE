@@ -83,7 +83,7 @@
 
                             {{-- Logout --}}
                             <a class="kb-menu-item"
-                            href="{{ route('logout') }}"
+                            href="{{ route('login') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Logout
                             </a>

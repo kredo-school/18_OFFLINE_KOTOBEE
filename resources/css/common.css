@@ -156,7 +156,7 @@ html, body {
 /* 山の上に浮かせるフォーム */
 .login-form-card {
     position: absolute;
-    top: 20%;              /* 上から20%の位置に浮かせる（調整OK） */
+    top: 16%;              /* 上から20%の位置に浮かせる（調整OK） */
     left: 50%;
     transform: translateX(-50%);
     background-color: #FFE693;
