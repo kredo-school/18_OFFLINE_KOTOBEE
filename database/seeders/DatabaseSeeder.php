@@ -26,6 +26,18 @@ class DatabaseSeeder extends Seeder
     VocabQuestionSeeder::class,
 ]);
 
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        // GamesTable登録用シーダー呼び出し
+        $this->call(GamesTableSeeder::class);
+        // GameSettingsTable登録用シーダー呼び出し
+        $this->call(GameSettingsTableSeeder::class);
+        // Kana_questionsTable登録用シーダー呼び出し
+        $this->call(Kana_questionsTableSeeder::class);
+    }
 }
 
 }
