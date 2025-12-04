@@ -54,23 +54,11 @@
         @endforeach
     </div>
 
-    <!-- 結果モーダル -->
-    <div id="result-modal" style="display:none;">
-        <h2>Result</h2>
-
-        <div id="rank-content"></div>
-
-        <div class="modal-buttons">
-            <button id="again-btn" class="kb-btn-again">Again</button>
-            <a href="{{ route('game.select') }}" class="kb-btn-back">Back</a>
-        </div>
-
-        {{-- <button class="modal-close-btn" onclick="closeModal()">Close</button> --}}
-    </div>
-    
-    <style>
-        #result-modal { }
-    </style>
+    <!-- 結果モーダル（共通コンポーネント） -->
+    @include('game.result_modal')    
+        <style>
+            #result-modal { }
+        </style>
 
     @push('scripts')
         @if ($mode === "60s-count")
