@@ -35,6 +35,7 @@ Route::prefix('vocab')->middleware('auth')->group(function () {
         ->name('vocab.checkKana');
 
     Route::post('/vocab/next', [VocabGameController::class, 'next'])->name('vocab.next');
+});
 
 /* --- Auth 後の画面 --- */
 Route::middleware(['auth'])->group(function() {

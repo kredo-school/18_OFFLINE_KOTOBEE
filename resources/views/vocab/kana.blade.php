@@ -5,9 +5,7 @@
 
 <div class="game-wrapper">
 
-    <div class="header-bar">
-        <img src="/images/logo.png" class="logo">
-    </div>
+    
 
     <h2 class="title">じゅんばんに ならべてね！</h2>
 

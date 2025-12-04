@@ -9,15 +9,8 @@ body {
     padding: 0 20px;
 }
 
-.header-bar {
-    background: #3C2A23;
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-}
-.logo {
-    height: 40px;
-}
+
+
 
 .title {
     margin-top: 25px;

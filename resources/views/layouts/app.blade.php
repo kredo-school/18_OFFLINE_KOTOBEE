@@ -27,7 +27,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-   
+
 
 
 </head>
@@ -42,8 +42,7 @@
             <!-- Left: Logo -->
             <div class="kb-left">
                 <a href="{{ url('/') }}">
-                    <img src="{{ asset('storage/images/icons/KotoBee_logo.png') }}" 
-                         alt="Logo" class="kb-logo">
+                    <img src="{{ asset('storage/images/icons/KotoBee_logo.png') }}" alt="Logo" class="kb-logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -51,91 +50,96 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-            <!-- Center: Group Name (if user belongs to group) -->
-            <div class="kb-center">
-                @auth
-                    @if (Auth::user()->group_id)
-                        <span class="kb-group-name">
-                            {{ Auth::user()->group->name ?? '' }}
-                        </span>
-                    @endif
-                @endauth
-            </div>
+                <!-- Center: Group Name (if user belongs to group) -->
+                <div class="kb-center">
+                    @auth
+                        @if (Auth::user()->group_id)
+                            <span class="kb-group-name">
+                                {{ Auth::user()->group->name ?? '' }}
+                            </span>
+                        @endif
+                    @endauth
+                </div>
 
-            <!-- Right: Avatar + Hamburger Menu -->
-            <div class="kb-right">
+                <!-- Right: Avatar + Hamburger Menu -->
+                <div class="kb-right">
 
-                @auth
-                <!-- Avatar -->
-                <a href="#" class="kb-avatar-link">
+                    @auth
+                        <!-- Avatar -->
+                        <a href="#" class="kb-avatar-link">
 
-<<<<<<< HEAD
-                            @if (Route::has('register'))
+                            <<<<<<< HEAD @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-=======
-                    @if (Auth::user()->avatar_url)
-                        <!-- アバター画像があるとき -->
-                        <img src="{{ asset('storage/images/avatars/' . Auth::user()->avatar_url) }}"
-                            class="kb-avatar">
-                    @else
-                        <!-- アバター画像がないとき：Font Awesome アイコン -->
-                        <i class="fa-solid fa-circle-user kb-avatar-icon"></i>
-                    @endif
-                </a>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        @if (Auth::check())
+                                            {{ Auth::user()->name }}
+                                            {{-- 変更 --}}
+                                        @endif
 
-                <!-- Hamburger Menu -->
-                <div class="kb-menu">
-                    <details class="kb-details">
-                        <!-- Triangle removed by CSS -->
-                        <summary class="kb-hamburger">☰</summary>
+                                        =======
+                                        @if (Auth::check() && Auth::user()->avatar_url)
+                                        {{-- 変更 --}}
+                                            <!-- 画像の処理 -->
 
-                        <div class="kb-menu-list">
 
-                            {{-- Group Join (only when not in a group) --}}
-                            @if (!Auth::user()->group_id)
-                                <a class="kb-menu-item" href="#">
-                                    Group Join
->>>>>>> master
-                                </a>
-                            @endif
-
-<<<<<<< HEAD
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                            <!-- アバター画像があるとき -->
+                                            <img src="{{ asset('storage/images/avatars/' . Auth::user()->avatar_url) }}"
+                                                class="kb-avatar">
+                                        @else
+                                            <!-- アバター画像がないとき：Font Awesome アイコン -->
+                                            <i class="fa-solid fa-circle-user kb-avatar-icon"></i>
+                                        @endif
                                     </a>
-=======
-                            {{-- Logout --}}
-                            <a class="kb-menu-item"
-                            href="{{ route('login') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
->>>>>>> master
 
-                            <form id="logout-form"
-                                action="{{ route('logout') }}"
-                                method="POST"
-                                class="d-none">
-                                @csrf
-                            </form>
+                                    <!-- Hamburger Menu -->
+                                    <div class="kb-menu">
+                                        <details class="kb-details">
+                                            <!-- Triangle removed by CSS -->
+                                            <summary class="kb-hamburger">☰</summary>
 
-                        </div>
-                    </details>
+                                            <div class="kb-menu-list">
+
+                                                {{-- Group Join (only when not in a group) --}}
+                                                @if (Auth::check() && !Auth::user()->group_id)
+
+                                                    <a class="kb-menu-item" href="#">
+                                                        Group Join
+                                                        >>>>>>> master
+                                                    </a>
+                                                @endif
+
+                                                <<<<<<< HEAD <div class="dropdown-menu dropdown-menu-end"
+                                                    aria-labelledby="navbarDropdown">
+                                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                                        onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                                        {{ __('Logout') }}
+                                                    </a>
+                                                    =======
+                                                    {{-- Logout --}}
+                                                    <a class="kb-menu-item" href="{{ route('login') }}"
+                                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                        Logout
+                                                    </a>
+                                                    >>>>>>> master
+
+                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                        class="d-none">
+                                                        @csrf
+                                                    </form>
+
+                                            </div>
+                                        </details>
+                                    </div>
+                                @endauth
+
                 </div>
-                @endauth
-
-            </div>
         </nav>
         <!-- ========================== -->
 
