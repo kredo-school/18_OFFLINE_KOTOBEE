@@ -130,51 +130,90 @@ class KanaGameController extends Controller
 
         $game_id = $request->game_id ?? 1;
         $setting_id = $request->setting_id;
+        $mode = $request->mode;   // ← 追加
 
-        // ① スコア保存
-        GameResult::create([
-            'user_id' => $user->id,
-            'game_id' => $game_id,
-            'setting_id' => $setting_id,
-            'created_by_admin_id' => null,
-            'score' => $request->score,
-            'play_time' => null,
-        ]);
+        /**
+         * ① 保存値を mode で切り替え
+         * 60s-count → score を保存
+         * timeattack → play_time を保存
+         */
+        if ($mode === '60s-count') {
 
-        // ② setting_id & game_id 内での最高スコアランキング（ユーザーごと1件）
-        $top3 = GameResult::select('user_id', DB::raw('MAX(score) as max_score'))
+            GameResult::create([
+                'user_id' => $user->id,
+                'game_id' => $game_id,
+                'setting_id' => $setting_id,
+                'score' => $request->score,
+                'play_time' => null,
+            ]);
+
+            // ランキング：score 高い順（DESC）
+            $orderColumn = 'score';
+            $orderDirection = 'desc';
+
+        } elseif ($mode === 'timeattack') {
+
+            GameResult::create([
+                'user_id' => $user->id,
+                'game_id' => $game_id,
+                'setting_id' => $setting_id,
+                'score' => null,
+                'play_time' => $request->play_time,  // 秒数（小数2桁）
+            ]);
+
+            // ランキング：play_time 少ない順（ASC）
+            $orderColumn = 'play_time';
+            $orderDirection = 'asc';
+        }
+
+
+        /**
+         * ② ランキング（ユーザーごと最高値）
+         */
+        $top3 = GameResult::select(
+                'user_id',
+                DB::raw("MIN($orderColumn) as best_value") // ASC なら MIN、DESC なら MAX
+            )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
             ->groupBy('user_id')
-            ->orderBy('max_score', 'desc')
+            ->orderBy('best_value', $orderDirection)
             ->limit(3)
             ->get()
-            ->map(function ($row) {
+            ->map(function ($row) use ($orderColumn) {
                 return [
                     'name'  => $row->user->name ?? 'NoName',
-                    'score' => $row->max_score
+                    'value' => $row->best_value
                 ];
             });
 
-        // ③ 自分の最高スコア
+        /**
+         * ③ 自分の最高値
+         */
         $myBest = GameResult::where('user_id', $user->id)
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
-            ->max('score');
+            ->min($orderColumn);  // ASC＝min, DESC＝max と同じ動き
 
-        // ④ 自分の順位（同じ条件でカウント）
-        $myRank = GameResult::select('user_id', DB::raw('MAX(score) as max_score'))
+        /**
+         * ④ 自分の順位
+         */
+        $myRank = GameResult::select(
+                'user_id',
+                DB::raw("MIN($orderColumn) as best_value")
+            )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
             ->groupBy('user_id')
-            ->having('max_score', '>', $myBest)
+            ->having('best_value', $orderDirection === 'asc' ? '<' : '>', $myBest)
             ->count() + 1;
 
         return response()->json([
-            'saved'    => true,
-            'top3'     => $top3,
-            'my_score' => $myBest,
-            'my_rank'  => $myRank
+            'saved'       => true,
+            'mode'        => $mode,
+            'top3'        => $top3,
+            'my_best'     => $myBest,
+            'my_rank'     => $myRank
         ]);
     }
 }
