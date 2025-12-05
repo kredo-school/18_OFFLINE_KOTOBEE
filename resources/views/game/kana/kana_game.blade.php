@@ -22,8 +22,11 @@
 
     <!-- 出題エリア -->
     <div class="quiz-header">
-        <div class="label">Score:&nbsp;</div>
-        <div id="score-display">0</div>
+        {{-- ▼ 60秒カウントモードのみ Score を表示 --}}
+        @if($mode === '60s-count')
+            <div class="label">Score:&nbsp;</div>
+            <div id="score-display">0</div>
+        @endif
 
         <div class="center-part">
             <div class="label">Choose</div>
