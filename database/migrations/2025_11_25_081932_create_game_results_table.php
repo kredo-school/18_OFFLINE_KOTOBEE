@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('vcab_stage_id')->nullable();
             $table->integer('gram_stage_id')->nullable();
             $table->integer('score')->nullable();
-            $table->decimal('play_time', 4, 2)->nullable();
+            $table->decimal('play_time', 6, 2)->nullable();
 
             $table->timestamps();
         });
