@@ -30,14 +30,33 @@
         <!--  Custom Navbar             -->
         <!-- ========================== -->
         <nav class="kb-navbar">
+            
             <!-- Left: Logo -->
             <div class="kb-left">
-                <a href="{{ url('/') }}">
+
+                @php
+                    $user = Auth::user();
+                    $isAdmin = false;
+
+                    if ($user) {
+                        $isAdmin = \App\Models\Group::where('owner_id', $user->id)->exists();
+                    }
+
+                    // ロゴの遷移先ルートを決定
+                    if (!$user) {
+                        $logoLink = route('login');
+                    } elseif ($isAdmin) {
+                        $logoLink = '#';   // 管理者ダッシュボード（未作成のため一旦 #）
+                    } else {
+                        $logoLink = route('game.select');
+                    }
+                @endphp
+
+                <a href="{{ $logoLink }}">
                     <img src="{{ asset('storage/images/icons/KotoBee_logo.png') }}" 
-                         alt="Logo" class="kb-logo">
+                        alt="Logo" class="kb-logo">
                 </a>
             </div>
-
             <!-- Center: Group Name (if user belongs to group) -->
             <div class="kb-center">
                 @auth
@@ -69,15 +88,31 @@
                 <!-- Hamburger Menu -->
                 <div class="kb-menu">
                     <details class="kb-details">
-                        <!-- Triangle removed by CSS -->
                         <summary class="kb-hamburger">☰</summary>
 
                         <div class="kb-menu-list">
 
-                            {{-- Group Join (only when not in a group) --}}
-                            @if (!Auth::user()->group_id)
+                            @php
+                                $user = Auth::user();
+                                $alreadyAdmin = \App\Models\Group::where('owner_id', $user->id)->exists();
+                                $alreadyPaid = \App\Models\Payment::where('owner_id', $user->id)->exists();
+                            @endphp
+
+                            {{-- Group Join: ユーザがグループに属していない かつ 管理者でない 場合のみ表示 --}}
+                            @if (!$user->group_id && !$alreadyAdmin)
                                 <a class="kb-menu-item" href="#">
                                     Group Join
+                                </a>
+                            @endif
+
+                            {{-- Group Create: 未所属・管理者でない・未支払 の３条件を満たすときのみ表示 --}}
+                            @if (
+                                !$user->group_id &&      {{-- グループに参加していない --}}
+                                !$alreadyAdmin &&        {{-- グループアドミンではない --}}
+                                !$alreadyPaid            {{-- まだPayPal契約していない --}}
+                            )
+                                <a class="kb-menu-item" href="{{ route('group.create') }}">
+                                    Create Group
                                 </a>
                             @endif
 
@@ -98,6 +133,7 @@
                         </div>
                     </details>
                 </div>
+
                 @endauth
 
             </div>
