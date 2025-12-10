@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('created_by_admin_id')->nullable()->constrained('users');
             $table->integer('stage_id');
             $table->string('note', 100)->nullable();
-            $table->string('problem_image_url', 255);
+            $table->string('image_url', 255);
             $table->text('correct_sentence');
             $table->timestamps();
         });
