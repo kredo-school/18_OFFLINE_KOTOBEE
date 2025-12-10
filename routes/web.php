@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GrammarGameController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KanaGameController;
 
@@ -30,4 +31,25 @@ Route::middleware(['auth'])->group(function() {
     /*** ▼ kanaゲーム：結果データ保存 ▼ ***/
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
+
+
+    ///////// Grammarゲーム //////////
+    /*** grammarゲーム：ステージ選択画面 ***/
+    Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
+        ->name('grammar.stages');
+
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');
+    
+    /*** grammarゲーム：ゲーム画面表示用 ***/
+    Route::get('/grammar/play/{id}', [GrammarGameController::class, 'play'])
+        ->name('grammar.play');
+
+    /*** grammarゲーム:結果データ保存***/
+    Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
+        ->name('grammar.save_result');
+
+    
+            
 });

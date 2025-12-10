@@ -16,7 +16,7 @@ class KanaGameController extends Controller
      */
     public function options()
     {
-        $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更
+        $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更        
 
         return view('game.kana_options', compact('settings'));
     }

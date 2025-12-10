@@ -40,3 +40,26 @@ export function bindAgainButton(startCallback) {
         if (startCallback) startCallback();
     });
 }
+
+//// grammarゲーム用開始ボタン /////
+export function bindAgainButtonGrammer() {
+
+    
+    const btn = document.getElementById("again-btn");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+        
+        // modalを非表示
+        const modal = document.getElementById('result-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+
+        // すでに取得済みの問題データでゲームを再スタート
+        if (window.questions) {
+            window.startGrammarGame(window.questions, window.grammar_stage_id);
+        }
+
+    });
+}

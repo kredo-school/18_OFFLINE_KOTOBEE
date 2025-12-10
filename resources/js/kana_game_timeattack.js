@@ -122,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
     // モーダル表示（改良版：data や timeSec が null / 型不一致でも安全に動作）
     function showResultModal(data, timeSec) {
         // safe conversion: number にならなければ null
