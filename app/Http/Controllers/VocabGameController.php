@@ -6,6 +6,8 @@ use App\Models\VocabQuestion;
 use App\Models\GameResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class VocabGameController extends Controller
 {
@@ -24,7 +26,7 @@ class VocabGameController extends Controller
             abort(404, "このステージには5単語ありません");
         }
 
-        // 問題セット作成（4択 → 並べ替え）
+        // 問題セット作成（4択 → 並べ替え） 
         $questionSet = [];
         foreach ($words as $word) {
             $questionSet[] = ['type' => 'choice', 'word' => $word];
@@ -49,45 +51,50 @@ class VocabGameController extends Controller
         $index = session('vocab_index', 0);
 
         if ($index >= count($questions)) {
-            return $this->finish();
+            return view('vocab.kana', [
+                'question' => null,
+                'chars' => [],
+                'shuffled' => [],
+                'isLast' => true, // モーダル表示用
+                'finishMode' => true, // JS に finish() の呼び出しを伝える
+            ]);
         }
+
 
         $current = $questions[$index];
         $word = $current['word'];
 
+        // ★ 最終問題フラグ
+        $isLast = ($index === count($questions) - 1);
+
         if ($current['type'] === 'choice') {
-            // 4択生成（重複防止）
             $choices = $this->makeChoices($word);
 
             return view('vocab.choice', [
                 'question' => $word,
                 'choices' => $choices,
+                'isLast' => $isLast, // ★ 追加
             ]);
         }
 
         if ($current['type'] === 'kana') {
             $chars = $this->splitUnicodeChars($word->word);
 
-            $minChoices = 6;  // 最低6文字の選択肢にする
+            $minChoices = 6;
 
             if (count($chars) < $minChoices) {
                 $stage = $word->stage_id;
-
-                // 同じステージの他単語を取得（自分以外）
                 $otherWords = VocabQuestion::where('stage_id', $stage)
                     ->where('id', '<>', $word->id)
                     ->pluck('word')
                     ->toArray();
 
                 $dummyChars = [];
-
                 foreach ($otherWords as $ow) {
                     $dummyChars = array_merge($dummyChars, $this->splitUnicodeChars($ow));
                 }
 
-                // 正解の文字は除外し、重複もなくす
                 $dummyChars = array_unique(array_diff($dummyChars, $chars));
-
                 shuffle($dummyChars);
 
                 $need = $minChoices - count($chars);
@@ -104,10 +111,10 @@ class VocabGameController extends Controller
                 'question' => $word,
                 'chars' => $chars,
                 'shuffled' => $choices,
+                'isLast' => $isLast, // ★ 追加
             ]);
         }
     }
-
 
     /**
      * 4択チェック（不正解なら進まない）
@@ -141,6 +148,29 @@ class VocabGameController extends Controller
     /**
      * 並べ替えチェック
      */
+    // public function checkKana(Request $request)
+    // {
+    //     $questions = session('vocab_questions', []);
+    //     $index = session('vocab_index', 0);
+    //     $current = $questions[$index];
+    //     $word = $current['word'];
+
+    //     $correct = implode('', $this->splitUnicodeChars($word->word));
+    //     $answer = $request->answer;
+
+    //     // 正解のみ last_answer を保存（画面に残すため）
+    //     if ($answer === $correct) {
+    //         session(['last_answer' => $answer]);
+    //         // 正解フラグをセットして戻す
+    //         return redirect()->route('vocab.show')->with('correct', true);
+    //     }
+
+    //     // 不正解の場合は last_answer を消して、choices をフルで再表示させる
+    //     session()->forget('last_answer');
+    //     // 不正解フラグだけセット
+    //     return redirect()->route('vocab.show')->with('error', true);
+    // }
+
     public function checkKana(Request $request)
     {
         $questions = session('vocab_questions', []);
@@ -149,45 +179,40 @@ class VocabGameController extends Controller
         $word = $current['word'];
 
         $correct = implode('', $this->splitUnicodeChars($word->word));
+        $answer = $request->answer;
 
-        // ❌ 不正解
-        if ($request->answer !== $correct) {
-            return redirect()->route('vocab.show')->with('error', true);
+        $isLast = ($index === count($questions) - 1);
+
+        if ($answer === $correct) {
+
+            session(['last_answer' => $answer]);
+
+            // ★ 最終問題は index を進める（finish() 発火のため）
+            if ($isLast) {
+                session(['vocab_index' => $index + 1]);
+            }
+
+            session(['isLast' => $isLast]);
+
+            return redirect()->route('vocab.show')->with('correct', true);
         }
 
-        // ⭕ 正解 → CONTINUE 表示
-        return redirect()->route('vocab.show')->with('correct', true);
+        session()->forget('last_answer');
+        session(['isLast' => false]);
+
+        return redirect()->route('vocab.show')->with('error', true);
     }
 
 
-    /**
-     * 全問題終了
-     */
-    public function finish()
-    {
-        $start = session('vocab_start_time');
-        $time = microtime(true) - $start;
-        $time = min(round($time, 2), 9999.99);
 
-        GameResult::create([
-            'user_id' => Auth::id(),
-            'game_id' => 2,
-            'setting_id' => null,
-            'created_by_admin_id' => null,
-            'score' => null,
-            'play_time' => round($time, 2),
-        ]);
 
-        session()->forget([
-            'vocab_questions',
-            'vocab_index',
-            'vocab_start_time'
-        ]);
 
-        return view('vocab.result', [
-            'time' => round($time, 2)
-        ]);
-    }
+    
+
+  
+
+
+
 
     /* --------------------------
         内部ロジック
@@ -251,8 +276,83 @@ class VocabGameController extends Controller
 
     public function next()
     {
+        // 前の回答とフラグを消す（重要）
+        session()->forget('last_answer');
+        session()->forget('correct');
+        session()->forget('error');
+
         $index = session('vocab_index', 0);
         session(['vocab_index' => $index + 1]);
+
         return redirect()->route('vocab.show');
+    }
+
+
+
+    /**
+     * 全問題終了
+     */
+    public function finish()
+    {
+        $start = session('vocab_start_time');
+        $time = microtime(true) - $start;
+        $time = min(round($time, 2), 9999.99);
+
+        $userId = Auth::id();
+
+        // 結果を保存
+        GameResult::create([
+            'user_id' => $userId,
+            'game_id' => 2,
+            'setting_id' => null,
+            'created_by_admin_id' => null,
+            'score' => null,
+            'play_time' => round($time, 2),
+        ]);
+
+        // ランキング処理
+        $game_id = 2;
+        $setting_id = null;
+        $orderColumn = 'play_time';
+        $orderDirection = 'asc'; // 小さい方が良い
+
+        // top3取得
+        $top3 = GameResult::with('user') // Userリレーションをロード
+            ->select('user_id', DB::raw("MIN($orderColumn) as best_value"))
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->groupBy('user_id')
+            ->orderBy('best_value', $orderDirection)
+            ->limit(3)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'name' => optional($row->user)->name ?? 'NoName',
+                    'value' => $row->best_value
+                ];
+            });
+
+        // 自分の最高記録
+        $myBest = GameResult::where('user_id', $userId)
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->min($orderColumn);
+
+        // 自分の順位
+        $myRank = GameResult::select('user_id', DB::raw("MIN($orderColumn) as best_value"))
+            ->where('game_id', $game_id)
+            ->where('setting_id', $setting_id)
+            ->groupBy('user_id')
+            ->havingRaw("MIN($orderColumn) < ?", [$myBest])
+            ->count() + 1;
+
+
+        return response()->json([
+            'saved' => true,
+            'time' => round($time, 2),
+            'my_best' => $myBest,
+            'my_rank' => $myRank,
+            'top3' => $top3
+        ]);
     }
 }

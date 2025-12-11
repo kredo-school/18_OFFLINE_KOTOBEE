@@ -1,19 +1,12 @@
-@extends('layouts.app')
+<!-- モーダルの背景オーバーレイ -->
+<div id="modal-overlay" class="modal" style="display:none;"></div>
 
-@section('content')
-<!-- public/css に置いた場合 -->
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-
-<div class="game-container" style="padding: 60px 20px;">
-
-    <h1 class="result-title">Great job!</h1>
-    <p class="result-time">{{ $time }} sec</p>
-
-    <a href="/home" class="btn btn-primary"
-       style="font-size:24px; padding:12px 40px; border-radius:15px;">
-        ホームに戻る
-    </a>
+<!-- モーダル本体 -->
+<div id="result-modal" style="display:none;">
+    <h2>Result</h2>
+    <div id="rank-content"></div>
+    <div class="modal-buttons">
+        <button id="again-btn" class="kb-btn-again">Again</button>
+        <a href="{{ route('game.select') }}" class="kb-btn-back">Back</a>
+    </div>
 </div>
-
-@endsection

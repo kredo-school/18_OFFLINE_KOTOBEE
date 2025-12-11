@@ -9,28 +9,61 @@ class VocabQuestionSeeder extends Seeder
 {
     public function run()
     {
-        $words = [
-            ['りんご', '76f3e9b7833f5e7d17440f56cb95fa0e.jpg'],
-            ['バナナ', 'd1d845e056662f70cda59d1370bfe917.jpg'],
-            ['ねこ',   'ed561b902c3e97ea06ef84b3d123a887.jpg'],
-            ['いぬ',   'f5bd1c425123f5c30c0b75ea99a2d9f2.jpg'],
-            ['くるま', '142d47e5fa461dd13b8724ba3a11a876.jpg'],
+        // Stage1 のみ画像あり
+        $stage1Words = [
+            ['ともだち', '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_35_54.png'],
+            ['せいと',   '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_38_43.png'],
+            ['せんせい', '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_40_21.png'],
+            ['わたし',   '/Users/hinatanishimoto/Desktop/スクリーンショット 2025-12-05 16.26.57.png'],
+            ['にほん',   '/Users/hinatanishimoto/Downloads/9f2c5901929736861250abf8b8dd9f6f.jpg'],
         ];
 
-        // ステージ1〜5
-        for ($stage = 1; $stage <= 5; $stage++) {
-            foreach ($words as $w) {
+        // ステージ2〜10（画像なし）
+        $data = [
+            2 => ['かぞく', 'ちち', 'はは', 'おねえさん', 'おとうと'],
+            3 => ['ふでばこ', 'ペン', 'けしゴム', 'なふだ', 'さいふ'],
+            4 => ['トイレ', 'とけい', 'ほん', 'ノート', 'かさ'],
+            5 => ['バス', 'でんしゃ', 'くるま', 'ごはん', 'やさい'],
+            6 => ['みます', 'ききます', 'かきます', 'そうじをします', 'べんきょうをします'],
+            7 => ['サッカー', 'テニス', 'ゲーム', 'プール', 'えいがかん'],
+            8 => ['チョコレート', 'ながい', 'みじかい', 'おおい', 'すくない'],
+            9 => ['コンピュータ', 'ひだり', 'みぎ', 'うえ', 'した'],
+            10 => ['しゃしん', 'かんたん', 'むずかしい', 'あつい', 'さむい'],
+        ];
+
+        // Stage 1 を画像付きで作成
+        foreach ($stage1Words as $w) {
+            DB::table('vocab_questions')->updateOrInsert(
+                [
+                    'word' => $w[0],
+                    'stage_id' => 1,
+                ],
+                [
+                    'game_id' => 2,
+                    'created_by_admin_id' => null,
+                    'note' => null,
+                    'image_url' => '/images/' . $w[1], // ここだけ画像あり
+                    'part_of_speech' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // Stage 2〜10 を画像なしで作成
+        foreach ($data as $stage => $words) {
+            foreach ($words as $word) {
                 DB::table('vocab_questions')->updateOrInsert(
                     [
-                        'word' => $w[0],
+                        'word' => $word,
                         'stage_id' => $stage,
                     ],
                     [
                         'game_id' => 2,
                         'created_by_admin_id' => null,
                         'note' => null,
-                        'image_url' => '/images/' . $w[1],
-                        'part_of_speech' => 1, // noun
+                        'image_url' => null,
+                        'part_of_speech' => 1,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]
