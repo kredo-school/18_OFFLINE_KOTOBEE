@@ -13,12 +13,22 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
-        // User::factory(10)->create();
+   public function run(): void
+{
+    // if (!User::where('email', 'test@example.com')->exists()) {
+    //     User::factory()->create([
+    //         // 'name' => 'Test User',
+    //         // 'email' => 'test@example.com',
+    //     ]);
+    // }
+
+    $this->call([
+    VocabQuestionSeeder::class,
+]);
 
         // User::factory()->create([
         //     'name' => 'Test User',
+        
         //     'email' => 'test@example.com',
         // ]);
 
@@ -30,3 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Kana_questionsTableSeeder::class);
     }
 }
+
+
+
