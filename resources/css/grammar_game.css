@@ -1,99 +1,11 @@
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(11, 1fr);
-  width: 95vw;
-  height: 80vh;
-  margin: 0 auto;
-  gap: 5px;
+ /* 画面全体の余白を消す */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #FFFFCE;
 }
-
-.card-custom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-  cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
-  font-size: min(6vw, 5vh);
-  font-weight: bold;
-}
-
-.card-custom:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
-}
-
-.card-custom.empty {
-  background-color: transparent;
-  box-shadow: none;
-  cursor: default;
-}
-
-.quiz-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.center-part {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
-
-.label {
-  font-size: 1.5rem;
-  color: #555;
-}
-
-.question {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #fd0303;
-}
-
-.timer-circle {
-  position: relative;
-  width: 50px;
-  height: 50px;
-}
-
-.timer-circle svg {
-  transform: rotate(-90deg);
-  width: 50px;
-  height: 50px;
-}
-
-.timer-circle circle {
-  fill: none;
-  stroke-width: 4;
-}
-
-.timer-circle .bg {
-  stroke: #ddd;
-}
-
-.timer-circle .progress {
-  stroke: #d32f2f;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear;
-}
-
-.time-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
+  
 /* モーダルの背景（黒半透明） */
 .modal {
   display: none;
@@ -105,7 +17,7 @@
   height: 100%;
   background: rgba(0,0,0,0.7);
 }
-
+  
 /* モーダル本体 */
 #result-modal {
   position: fixed;
@@ -125,7 +37,7 @@
 
   z-index: 9999;
 }
-
+  
 /* モーダルの文字カラー（黒に変更推奨：赤は背景と合わない） */
 #result-modal h2,
 #result-modal p {
@@ -147,7 +59,7 @@
     margin-right: 8px;
     box-shadow: 0 0 3px rgba(0,0,0,0.15);
 }
-
+  
 .rank-line {
     font-size: 1.3rem;
     margin-bottom: 8px;
@@ -157,7 +69,7 @@
 .rank-line i {
     font-size: 18px;
 }
-
+  
 .modal-buttons {
     margin-top: 20px;
     display: flex;
@@ -190,3 +102,4 @@
     cursor: pointer;
     font-size: 1rem;
 }
+  
