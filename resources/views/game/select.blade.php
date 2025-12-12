@@ -20,7 +20,7 @@
         </li>
 
         <li>
-            <a href="#" class="game-menu-btn disabled">
+            <a href="{{ route('grammar.stages') }}" class="game-menu-btn">
                 3. Grammar Game
             </a>
         </li>

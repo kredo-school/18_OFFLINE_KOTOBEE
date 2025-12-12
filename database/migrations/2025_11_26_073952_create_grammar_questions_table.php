@@ -13,12 +13,25 @@ return new class extends Migration
     {
         Schema::create('grammar_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('game_id')->constrained('games');
-            $table->foreignId('created_by_admin_id')->nullable()->constrained('users');
+
+            // Parent game
+            $table->foreignId('game_id')->constrained('games')->onDelete('cascade');
+
+            // Created by admin, nullable
+            $table->foreignId('created_by_admin_id')->nullable()->constrained('users')->onDelete('set null');
+
+            // Stage ID
             $table->integer('stage_id');
+
+            // Note (optional)
             $table->string('note', 100)->nullable();
-            $table->string('image_url', 255);
+
+            // Problem image URL (illustration)
+            $table->string('problem_image_url', 255);
+
+            // Correct sentence
             $table->text('correct_sentence');
+
             $table->timestamps();
         });
     }
