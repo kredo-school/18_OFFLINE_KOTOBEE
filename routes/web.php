@@ -6,7 +6,8 @@ use App\Http\Controllers\KanaGameController;
 
 // PayPal SDK check用に記述
 // use Srmklive\PayPal\Services\PayPal as PayPalClient;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentController;         // 随時要
+use App\Http\Controllers\SubscriptionController;    // サブスク用
 
 /* --- 初期ページ --- */
 Route::get('/', function () {
@@ -41,6 +42,13 @@ Route::middleware(['auth'])->group(function() {
     // 仮の GroupAdmin ダッシュボード画面
     Route::get('/group/dashboard', function () {return 'Dashboard (Coming Soon)';})->name('group.dashboard');
 
+
+    /*** ▼ サブスクリプション関連 ▼ ***/
+    Route::post('/subscription/start', [SubscriptionController::class, 'start'])->name('subscription.start');
+    Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+
+    // これは随時決済用
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
     // Step1: 支払い開始

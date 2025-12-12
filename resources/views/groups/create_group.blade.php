@@ -24,7 +24,8 @@
         @endif
 
         {{-- グループ作成フォーム --}}
-        <form action="{{ route('group.store') }}" method="POST">
+        <form action="{{ route('subscription.start') }}" method="POST">
+        {{-- <form action="{{ route('group.store') }}" method="POST"> 　随時用のコードなのでコメント --}}
             @csrf
 
             {{-- Plan Boxes --}}
