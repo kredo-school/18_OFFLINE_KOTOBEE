@@ -166,14 +166,12 @@ window.startGrammarGame = function(questions, stage_id) {
         parent: 'phaser-root',
         backgroundColor: "#FFFFCE",
         scene: [MainScene],
-        resolution: window.devicePixelRatio,
+        resolution: Math.max(window.devicePixelRatio || 1, 2),
         dom: { createContainer: true },
         scale: {
             ...(is_mobile ? {} : { autoCenter: Phaser.Scale.CENTER_BOTH})
-        }
+        }        
     };
-    
-
 
     console.log("innerWidth:", window.innerWidth);
     console.log("innerHeight:", window.innerHeight);
@@ -358,10 +356,10 @@ class MainScene extends Phaser.Scene {
         this.conveyor_speed = 0;
 
         this.conveyor_min_speed = 80;  // フェーズアウト開始時の最低速度（px/s）
-        this.conveyor_max_speed = 800;  // フェーズアウト中の最高速度（px/s）
-        this.conveyor_accel     = 2000;  // 加速量（px/s^2）
+        this.conveyor_max_speed = 500;  // フェーズアウト中の最高速度（px/s）
+        this.conveyor_accel     = 300;  // 加速量（px/s^2）
         this.conveyor_decel     = 100;  // 減速量（px/s^2）
-        this.conveyor_phasein_start_speed = 500; // フェーズイン時の開始スピード
+        this.conveyor_phasein_start_speed = 300; // フェーズイン時の開始スピード
         
         // 瓶のフェーズインのフラグ
         this.is_phase_in = false;
@@ -398,7 +396,7 @@ class MainScene extends Phaser.Scene {
         this.wave_speed = 4;
 
         // 液体を注ぐスピード
-        this.pouring_speed = 150;
+        this.pouring_speed = 100;
         
         // 液体を減速する倍率
         this.smooth_wave_ratio = 1 - Math.pow(this.wave_ratio, 2);
