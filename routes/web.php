@@ -74,21 +74,31 @@ Route::middleware(['auth'])->group(function() {
 
 
     /*** ▼ サブスクリプション関連 ▼ ***/
-    Route::post('/subscription/start', [SubscriptionController::class, 'start'])->name('subscription.start');
-    Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
-    Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    Route::post('/subscription/start', [PaymentController::class, 'createPayment'])->name('subscription.start');
+    // Route::post('/subscription/start', [SubscriptionController::class, 'start'])->name('subscription.start');
+    // Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    // Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 
     // これは随時決済用
     // 送信（決済はまだ未実装）
-    Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
+    // Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
+
     // Step1: 支払い開始
     Route::get('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+
     // Step2: PayPalから戻る（成功）
-    Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    // Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+
     // Step3: キャンセル
-    Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+    // Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+
     // PayPal 完了コールバック
-    Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
+    // Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
+
+    // pending 画面
+    Route::get('/group/pending', [GroupController::class, 'pending'])->name('group.pending');
+    // pending ステータス確認API
+    Route::get('/group/pending/status', [GroupController::class, 'pendingStatus'])->name('group.pending.status');
 
 
     ///////// Grammarゲーム //////////
@@ -107,43 +117,5 @@ Route::middleware(['auth'])->group(function() {
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-
-    
             
 });
-
-
-
-
-// // PayPal SDK 動作確認用ルート
-// Route::get('/paypal-test', function () {
-
-//     // PayPal クライアント生成
-//     $paypal = new PayPalClient;
-
-//     // 設定読み込み（config/paypal.php を使用）
-//     $paypal->setApiCredentials(config('paypal'));
-
-//     // アクセストークン取得（ここで SDK 接続を実行）
-//     try {
-//         $token = $paypal->getAccessToken();
-
-//         return response()->json([
-//             'status' => 'OK',
-//             'message' => 'PayPal SDK 接続成功！',
-//             'access_token_sample' => substr($token['access_token'], 0, 20) . '...',
-//             'token_type' => $token['token_type'],
-//             'expires_in' => $token['expires_in'],
-//             'mode' => config('paypal.mode'),
-//         ]);
-
-//     } catch (\Exception $e) {
-
-//         // 接続失敗（Credential エラーなど）
-//         return response()->json([
-//             'status' => 'ERROR',
-//             'message' => $e->getMessage(),
-//             'mode' => config('paypal.mode'),
-//         ], 500);
-//     }
-// });

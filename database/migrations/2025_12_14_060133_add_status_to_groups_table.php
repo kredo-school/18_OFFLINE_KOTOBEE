@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 12);
-            $table->string('note', 255);
-            $table->foreignID('owner_id')->constrained('users');
-            $table->string('secret', 12);
-            $table->timestamps();
+        Schema::table('groups', function (Blueprint $table) {
+            $table->string('status')->default('pending')->after('secret');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groups');
+        Schema::table('groups', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };

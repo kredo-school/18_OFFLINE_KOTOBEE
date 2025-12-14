@@ -75,25 +75,9 @@ class CreatePayPalPlans extends Command
                 'product_id' => $productId,
                 'name' => ucfirst($name) . " Plan",
                 'description' => ucfirst($name) . " monthly subscription",
+
+                // 12/13検証のために下記のコードを追加：あとで削除
                 'billing_cycles' => [
-
-                    // ---- 無料トライアル（30日）----
-                    [
-                        'frequency' => [
-                            'interval_unit' => 'DAY',
-                            'interval_count' => 30,
-                        ],
-                        'tenure_type' => 'TRIAL',
-                        'sequence' => 1,
-                        'total_cycles' => 1,
-                        'pricing_scheme' => [
-                            'fixed_price' => [
-                                'value' => '0',
-                                'currency_code' => 'USD'
-                            ]
-                        ]
-                    ],
-
                     // ---- 定期課金（月1回）----
                     [
                         'frequency' => [
@@ -101,7 +85,7 @@ class CreatePayPalPlans extends Command
                             'interval_count' => 1,
                         ],
                         'tenure_type' => 'REGULAR',
-                        'sequence' => 2,
+                        'sequence' => 1,
                         'total_cycles' => 0,
                         'pricing_scheme' => [
                             'fixed_price' => [
@@ -110,13 +94,56 @@ class CreatePayPalPlans extends Command
                             ]
                         ]
                     ],
-
                 ],
+
                 'payment_preferences' => [
                     'auto_bill_outstanding' => true,
                     'setup_fee_failure_action' => 'CONTINUE',
                     'payment_failure_threshold' => 3,
                 ],
+
+            // 12/13検証のために下記のコードをコメントアウト
+            //     'billing_cycles' => [
+            //         // ---- 無料トライアル（30日）----
+            //         [
+            //             'frequency' => [
+            //                 'interval_unit' => 'DAY',
+            //                 'interval_count' => 30,
+            //             ],
+            //             'tenure_type' => 'TRIAL',
+            //             'sequence' => 1,
+            //             'total_cycles' => 1,
+            //             'pricing_scheme' => [
+            //                 'fixed_price' => [
+            //                     'value' => '0',
+            //                     'currency_code' => 'USD'
+            //                 ]
+            //             ]
+            //         ],
+
+            //         // ---- 定期課金（月1回）----
+            //         [
+            //             'frequency' => [
+            //                 'interval_unit' => 'MONTH',
+            //                 'interval_count' => 1,
+            //             ],
+            //             'tenure_type' => 'REGULAR',
+            //             'sequence' => 2,
+            //             'total_cycles' => 0,
+            //             'pricing_scheme' => [
+            //                 'fixed_price' => [
+            //                     'value' => (string)$price,
+            //                     'currency_code' => 'USD'
+            //                 ]
+            //             ]
+            //         ],
+
+            //     ],
+            //     'payment_preferences' => [
+            //         'auto_bill_outstanding' => true,
+            //         'setup_fee_failure_action' => 'CONTINUE',
+            //         'payment_failure_threshold' => 3,
+            //     ],
             ];
 
             $res = Http::withToken($accessToken)

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Group;
-use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
     /**
-     * Create Group 画面表示
+     * Create Group 画面
      */
     public function create()
     {
@@ -17,36 +15,38 @@ class GroupController extends Controller
     }
 
     /**
-     * Create Group の送信処理
+     * 支払い確認中画面
      */
-    public function store(Request $request)
+    public function pending()
     {
-        $request->validate([
-            'plan'   => 'required|in:basic,standard,premium',
-            'name'   => 'required|string|max:12',
-            'secret' => 'required|string|max:12',
-            'note'   => 'nullable|string|max:255',
-        ]);
+        $group = Group::where('owner_id', auth()->id())
+            ->latest()
+            ->first();
 
-        // 入力内容をセッションに保存（決済成功後に group を作成するため）
-        session([
-            'group_create_data' => [
-                'plan'   => $request->plan,
-                'name'   => $request->name,
-                'secret' => $request->secret,
-                'note'   => $request->note,
-            ]
-        ]);
+        if (!$group) {
+            return redirect()->route('group.create');
+        }
 
-        // plan → price の紐づけ
-        $price = match ($request->plan) {
-            'basic'    => 5.00,
-            'standard' => 10.00,
-            'premium'  => 20.00,
-            default    => 0,
-        };
+        if ($group->status === 'active') {
+            return redirect()->route('group.dashboard');
+        }
 
-        // すべての値に price を追加して PaymentController に POST で送る
-        return redirect()->route('payment.create', $request->all() + ['price' => $price]);
+        return view('groups.pending', compact('group'));
     }
+
+    public function pendingStatus()
+    {
+        $group = Group::where('owner_id', auth()->id())
+            ->latest()
+            ->first();
+
+        if (!$group) {
+            return response()->json(['status' => 'none']);
+        }
+
+        return response()->json([
+            'status' => $group->status,
+        ]);
+    }
+
 }
