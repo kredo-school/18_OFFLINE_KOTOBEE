@@ -1,0 +1,156 @@
+/* タッチパネル機器はスクロール不可 */
+@media (pointer: coarse) {
+    html, body {
+        overflow: hidden;
+        height: 100%;
+        overscroll-behavior: none;
+        touch-action: none;
+    }
+}         
+
+body {
+    background: #FFFFCE;
+    color: #000;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.controls {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    position: relative;
+    z-index: 10;
+}
+
+/* .controls button {
+    padding: 6px 12px;
+    font-size: 16px;
+} */
+
+
+.controls button {
+    padding: 6px 14px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #FFB728;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.arrow-btn {
+    padding: 6px 14px;          /* ← buttonと同じにして見た目統一 */
+    display: inline-flex;        /* ← SVGを中央に */
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow-icon {
+    width: 15px;
+    height: 30px;
+    fill: currentColor;          /* ← buttonのcolorが効く */
+}
+
+.controls button:hover {
+    background-color: #FFAA00;
+}
+
+.controls button:active {
+    transform: scale(0.95);
+}
+  
+
+
+
+/* スマホでは矢印を表示しない */
+@media screen and (max-width: 768px) {
+    .controls {
+        display: none;
+    }
+}
+
+
+/* 円の領域 */
+.circle-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+/* 六角形の見た目 */
+.hex {
+    position: absolute;
+    top: 30%;
+    left: 38%;
+    width: 100px;
+    height: 86px; /* 正六角形比率 */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    font-weight: bold;
+    /* aを使う時 */
+    text-decoration: none;
+    /* デフォルトではクリック不可 */
+    pointer-events: none;
+}
+
+/* 六角形 SVG 本体 */
+.hex-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 六角形の塗りと枠線 */
+.hex.played .hex-svg path {
+    fill: #FF9900;   /* 通常時の色 */
+    stroke: black;   /* 枠線の色 */
+    stroke-width: 2; /* 枠線の太さ */
+}
+
+.hex.unplayed .hex-svg path {
+    fill: #999999;
+    stroke: #555;
+    stroke-width: 2;
+}
+
+/* 六角形をクリックしたら濃いオレンジになる */
+.hex.played:active .hex-svg path {
+    fill: #e58a00; 
+}
+
+/* 中央のラベル（数字） */
+.hex-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* クリック可能な六角形 */
+.hex.clickable {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* フォーカス中の六角形 */
+.hex.focused .hex-svg path {
+    background: #000;
+}
+
+/* 押した時の薄青いのを消す */
+a {
+    -webkit-tap-highlight-color: transparent;
+}

@@ -14,7 +14,7 @@
         </li>
 
         <li>
-            <a href="#" class="game-menu-btn disabled">
+            <a href="{{ route('home')}}" class="game-menu-btn">
                 2. Vocabulary Game
             </a>
         </li>

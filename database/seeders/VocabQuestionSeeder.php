@@ -9,14 +9,14 @@ class VocabQuestionSeeder extends Seeder
 {
     public function run()
     {
-        // Stage1 のみ画像あり
+        // // Stage1 のみ画像あり
         $stage1Words = [
             ['ともだち', '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_35_54.png'],
             ['せいと',   '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_38_43.png'],
             ['せんせい', '/Users/hinatanishimoto/Downloads/ChatGPT Image 2025年12月5日 14_40_21.png'],
             ['わたし',   '/Users/hinatanishimoto/Desktop/スクリーンショット 2025-12-05 16.26.57.png'],
             ['にほん',   '/Users/hinatanishimoto/Downloads/9f2c5901929736861250abf8b8dd9f6f.jpg'],
-        ];
+        ];       
 
         // ステージ2〜10（画像なし）
         $data = [
@@ -63,6 +63,7 @@ class VocabQuestionSeeder extends Seeder
                         'created_by_admin_id' => null,
                         'note' => null,
                         'image_url' => null,
+                        // 'image_url' => 'dummy.png',
                         'part_of_speech' => 1,
                         'created_at' => now(),
                         'updated_at' => now(),

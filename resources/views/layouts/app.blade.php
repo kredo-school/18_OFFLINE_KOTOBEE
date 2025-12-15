@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -97,11 +98,25 @@
 
                             <div class="kb-menu-list">
 
-                                @php
-                                    $user = Auth::user();
-                                    $alreadyAdmin = \App\Models\Group::where('owner_id', $user->id)->exists();
-                                    $alreadyPaid = \App\Models\Payment::where('owner_id', $user->id)->exists();
-                                @endphp
+                            @php
+                                $user = Auth::user();
+                                $alreadyAdmin = \App\Models\Group::where('owner_id', $user->id)->exists();
+                                $alreadyPaid = \App\Models\Payment::where('owner_id', $user->id)->exists();
+                            @endphp
+                            
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        @if (Auth::check())
+                                            {{ Auth::user()->name }}
+                                            {{-- 変更 --}}
+                                        @endif
 
                                 {{-- Group Join: ユーザがグループに属していない かつ 管理者でない 場合のみ表示 --}}
                                 @if (!$user->group_id && !$alreadyAdmin)
