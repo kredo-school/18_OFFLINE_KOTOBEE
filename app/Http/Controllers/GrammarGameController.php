@@ -13,8 +13,39 @@ class GrammarGameController extends Controller
     ///// Grammarステージ選択画面 /////
     public function stages()
     {
+        $user_id = Auth::id();
+
+        // // Grammar Gameのゲームリザルトを取得
+        // $results = GameResult::where('game_id', 3)
+        //     ->where('user_id', $user_id)
+        //     ->get();
+        
+            
+        // // // プレイしたステージの配列                            
+        // $played_stage_ids = $results
+        //     ->pluck('gram_stage_id')
+        //     ->unique()
+        //     ->values();
+            
+        // プレイしたステージのid配列
+        $played_stage_ids = GameResult::where('game_id', 3)
+            ->where('user_id', $user_id)
+            ->distinct()
+            ->pluck('gram_stage_id')
+            ->values();
+
+        // dd($played_stage_ids);
+
+        // Grammar Questionを取得
         $stages = GrammarQuestion::where('game_id', 3)->get();
-        return view('game.grammar.grammar_stages', compact('stages'));        
+
+
+        
+        
+        return view(
+            'game.grammar.grammar_stages',
+            compact('stages', 'played_stage_ids')
+        );
     }
 
     ///// JSON API用の関数 //////
