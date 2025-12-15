@@ -26,7 +26,7 @@ Route::prefix('vocab')->middleware('auth')->group(function () {
     // 現在の問題表示
     Route::get('/question', [VocabGameController::class, 'showQuestion'])
         ->name('vocab.show');
-
+    
     // 4択チェック
     Route::post('/check-choice', [VocabGameController::class, 'checkChoice'])
         ->name('vocab.checkChoice');
@@ -78,7 +78,5 @@ Route::middleware(['auth'])->group(function() {
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-
-    
             
 });
