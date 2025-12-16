@@ -82,5 +82,4 @@ Route::middleware(['auth'])->group(function() {
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-
 });
