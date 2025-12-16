@@ -64,4 +64,6 @@ class HomeController extends Controller
             compact('stages', 'played_stage_ids')
         );
     }
+
+    
 }

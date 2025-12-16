@@ -61,22 +61,26 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
 
-
+        
     ///////// Grammarゲーム //////////
     /*** grammarゲーム：ステージ選択画面 ***/
     Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
         ->name('grammar.stages');
 
-    /*** grammarゲーム：ゲーム開始用API ***/
-    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
-        ->name('grammar.start');
-    
+    /*** grammarゲーム：ゲームスタート画面 ***/
+    Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
+        ->name('grammar.start_page');
+
     /*** grammarゲーム：ゲーム画面表示用 ***/
-    Route::get('/grammar/play/{id}', [GrammarGameController::class, 'play'])
+    Route::get('/grammar/play/{stage_id}', [GrammarGameController::class, 'play'])
         ->name('grammar.play');
+
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');    
 
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-            
+
 });

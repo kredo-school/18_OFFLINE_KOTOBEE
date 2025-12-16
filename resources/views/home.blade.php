@@ -59,11 +59,15 @@
 {{-- 固有css呼び出し --}}
 @push('styles')
     @vite(['resources/css/game_stages.css'])
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/css/game_start_modal.css'])
 @endpush
 
 {{-- 固有script呼び出し --}}
 @push('scripts')
     @vite(['resources/js/game_stages.js'])
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/js/game_start_modal.js'])
 @endpush
 
 {{-- 内容 --}}
@@ -87,6 +91,8 @@
 {{-- 六角形作成 --}}
 <div class="circle-container" id="circle"></div>
 
+{{-- モーダル差し込み --}}
+<div id="start-modal-root"></div>
 
 {{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
 <script>

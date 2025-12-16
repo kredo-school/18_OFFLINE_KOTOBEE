@@ -29,12 +29,6 @@ body {
     z-index: 10;
 }
 
-/* .controls button {
-    padding: 6px 12px;
-    font-size: 16px;
-} */
-
-
 .controls button {
     padding: 6px 14px;
     font-size: 20px;
