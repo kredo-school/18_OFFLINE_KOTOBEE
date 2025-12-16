@@ -141,16 +141,14 @@
                 </div>
 
                 @endauth
-
+            </div>
+        </nav>
+           
         <!-- Body Content -->
         <main class="kb-main">
             @yield('content')
+            @yield('scripts')
         </main>
-
     </div>
-
-    @yield('scripts')
-
 </body>
-
 </html>
