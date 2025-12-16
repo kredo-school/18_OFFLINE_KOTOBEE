@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VocabGameController;
+use App\Http\Controllers\GrammarGameController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KanaGameController;
 
@@ -15,6 +18,33 @@ Route::get('/', function () {
 
 /* --- Auth --- */
 Auth::routes();
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+/* Vocabulary Game */
+Route::prefix('vocab')->middleware('auth')->group(function () {
+
+    // ステージ開始
+    Route::get('/start/{stage}', [VocabGameController::class, 'start'])
+        ->name('vocab.start');
+
+    // 現在の問題表示
+    Route::get('/question', [VocabGameController::class, 'showQuestion'])
+        ->name('vocab.show');
+    
+    // 4択チェック
+    Route::post('/check-choice', [VocabGameController::class, 'checkChoice'])
+        ->name('vocab.checkChoice');
+
+    // かな並べ替えチェック
+    Route::post('/check-kana', [VocabGameController::class, 'checkKana'])
+        ->name('vocab.checkKana');
+
+    Route::post('/vocab/next', [VocabGameController::class, 'next'])->name('vocab.next');
+
+    Route::get('/vocab/finish', [VocabGameController::class, 'finish'])->name('vocab.finish');
+
+});
 
 /* --- Auth 後の画面 --- */
 Route::middleware(['auth'])->group(function() {
@@ -51,40 +81,23 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
     // PayPal 完了コールバック
     Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
+
+
+    ///////// Grammarゲーム //////////
+    /*** grammarゲーム：ステージ選択画面 ***/
+    Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
+        ->name('grammar.stages');
+
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');
+    
+    /*** grammarゲーム：ゲーム画面表示用 ***/
+    Route::get('/grammar/play/{id}', [GrammarGameController::class, 'play'])
+        ->name('grammar.play');
+
+    /*** grammarゲーム:結果データ保存***/
+    Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
+        ->name('grammar.save_result');
+            
 });
-
-
-
-
-// // PayPal SDK 動作確認用ルート
-// Route::get('/paypal-test', function () {
-
-//     // PayPal クライアント生成
-//     $paypal = new PayPalClient;
-
-//     // 設定読み込み（config/paypal.php を使用）
-//     $paypal->setApiCredentials(config('paypal'));
-
-//     // アクセストークン取得（ここで SDK 接続を実行）
-//     try {
-//         $token = $paypal->getAccessToken();
-
-//         return response()->json([
-//             'status' => 'OK',
-//             'message' => 'PayPal SDK 接続成功！',
-//             'access_token_sample' => substr($token['access_token'], 0, 20) . '...',
-//             'token_type' => $token['token_type'],
-//             'expires_in' => $token['expires_in'],
-//             'mode' => config('paypal.mode'),
-//         ]);
-
-//     } catch (\Exception $e) {
-
-//         // 接続失敗（Credential エラーなど）
-//         return response()->json([
-//             'status' => 'ERROR',
-//             'message' => $e->getMessage(),
-//             'mode' => config('paypal.mode'),
-//         ], 500);
-//     }
-// });

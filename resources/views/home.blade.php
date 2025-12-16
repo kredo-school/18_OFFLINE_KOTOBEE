@@ -1,24 +1,104 @@
-@extends('layouts.app')
+
+{{-- 元のコード --}}
+
+
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <br><br><br>
-            <div class="card mt-5">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <h2>Welcome, {{ $user->name }}!</h2>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    <hr>
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
+    <h4>Vocabulary Game</h4>
+
+    <div class="mb-3">
+        <p>Select a stage to start:</p>
+        @foreach($stages as $stage)
+            <a href="{{ route('vocab.start', ['stage' => $stage]) }}" class="btn btn-primary mb-1">
+                Stage {{ $stage }}
+            </a>
+        @endforeach
     </div>
+
+    <hr>
+
+    <h4>Recent Results</h4>
+    @if($recentResults->isEmpty())
+        <p>No results yet. Play a game!</p>
+    @else
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Score</th>
+                    <th>Time (min)</th>
+                    <th>Played At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($recentResults as $result)
+                    <tr>
+                        <td>{{ $result->game_id }}</td> ゲームIDをステージに置き換える場合は調整
+                        <td>{{ $result->score }}</td>
+                        <td>{{ $result->play_time }}</td>
+                        <td>{{ $result->created_at->format('Y-m-d H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
-@endsection
+@endsection --}}
+
+
+{{-- 変更後のコード --}}
+
+@extends('layouts.game_stages')
+
+{{-- 固有css呼び出し --}}
+@push('styles')
+    @vite(['resources/css/game_stages.css'])
+@endpush
+
+{{-- 固有script呼び出し --}}
+@push('scripts')
+    @vite(['resources/js/game_stages.js'])
+@endpush
+
+{{-- 内容 --}}
+@section('content')
+
+{{-- 移動ボタン --}}
+<div class="controls">
+    <button id="prev" class="arrow-btn">
+        <svg viewBox="0 0 30 30" class="arrow-icon" aria-hidden="true">
+            <path d="M14.8438 29.6878L1.12057e-05 14.844L14.8438 0.000266552L18.5085 3.63663L9.9716 12.1736H29.233V17.5145H9.9716L18.5085 26.0372L14.8438 29.6878Z"/>
+        </svg>            
+    </button>
+    <span id="info">Stage: 1</span>
+    <button id="next" class="arrow-btn">
+        <svg viewBox="0 0 30 30" class="arrow-icon" aria-hidden="true">
+            <path d="M14.3891 -0.000266403L29.2329 14.8435L14.3891 29.6872L10.7244 26.0509L19.2613 17.5139L-5.72205e-05 17.5139V12.173H19.2613L10.7244 3.6503L14.3891 -0.000266403Z"/>
+        </svg>
+    </button>
+</div>        
+
+{{-- 六角形作成 --}}
+<div class="circle-container" id="circle"></div>
+
+
+{{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
+<script>
+    
+    // ステージ移動ためのurl配列
+    window.stage_urls = @json($stages);
+
+    // console.log('stage_urls', stage_urls);
+    
+    // 各ステージのid配列
+    window.played_stage_ids = @json($played_stage_ids);
+
+    // console.log('played_stage_ids', played_stage_ids);
+
+</script>
