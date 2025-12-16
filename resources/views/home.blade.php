@@ -56,18 +56,21 @@
 
 @extends('layouts.game_stages')
 
-{{-- 固有css呼び出し --}}
-@push('styles')
-    @vite(['resources/css/game_stages.css'])
-    {{-- ゲーム開始時のmodal --}}
-    @vite(['resources/css/game_start_modal.css'])
-@endpush
-
 {{-- 固有script呼び出し --}}
 @push('scripts')
     @vite(['resources/js/game_stages.js'])
     {{-- ゲーム開始時のmodal --}}
     @vite(['resources/js/game_start_modal.js'])
+    {{-- 画面共通フォント --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+@endpush
+
+
+{{-- 固有css呼び出し --}}
+@push('styles')
+    @vite(['resources/css/game_stages.css'])
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/css/game_start_modal.css'])
 @endpush
 
 {{-- 内容 --}}

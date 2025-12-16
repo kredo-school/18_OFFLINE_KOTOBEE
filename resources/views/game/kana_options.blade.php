@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+
+@push('styles')
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/css/game_start_modal.css'])
+@endpush
+
+@push('scripts')
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/js/game_start_modal.js'])
+@endpush
+
 @section('content')
 <div class="container">
 
@@ -26,8 +37,13 @@
                 <td>{{ $setting->script }}</td>
                 <td>{{ $setting->subtype }}</td>
                 <td>
-                    <a href="{{ route('kana.start', $setting->id) }}" 
+                    {{-- <a href="{{ route('kana.start', $setting->id) }}" 
                        class="btn btn-primary btn-sm">
+                        Start
+                    </a> --}}
+
+                    <a href="{{ route('kana.start_page', $setting->id) }}" 
+                        class="btn btn-primary btn-sm js-open-start-modal">
                         Start
                     </a>
                 </td>
@@ -37,4 +53,8 @@
     </table>
 
 </div>
+
+{{-- モーダル差し込み --}}
+<div id="start-modal-root"></div>
+
 @endsection

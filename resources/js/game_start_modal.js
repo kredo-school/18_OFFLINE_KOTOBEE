@@ -61,3 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
         open_stage_modal(url);
     });
 });
+
+// カナゲーム用
+document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.js-open-start-modal");
+    if (!a) return;
+  
+    e.preventDefault();
+    open_stage_modal(a.href);
+  });
+  

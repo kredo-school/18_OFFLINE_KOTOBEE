@@ -39,7 +39,7 @@ class GrammarGameController extends Controller
         $game_id = 3;
 
         // ユーザーのベストタイム
-        $best_time = GameResult::where('user_id', $user->id)
+        $best_value = GameResult::where('user_id', $user->id)
             ->where('gram_stage_id', $stage_id)
             ->min('play_time');
 
@@ -47,11 +47,13 @@ class GrammarGameController extends Controller
         $top3 = GameResult::with('user:id,name')
             ->where('gram_stage_id', $stage_id)
             ->whereHas('user') // ユーザーが存在しないレコードを除外（念のため
-            ->select('user_id', DB::raw('MIN(play_time) as best_time'))
+            ->select('user_id', DB::raw('MIN(play_time) as best_value'))
             ->groupBy('user_id')
-            ->orderBy('best_time', 'asc')
+            ->orderBy('best_value', 'asc')
             ->limit(3)
             ->get();
+        
+        // dd($top3);
             
         // ゲームタイトル
         $title = 'Grammar Game';
@@ -68,7 +70,7 @@ class GrammarGameController extends Controller
         if ($request->ajax()) {
             return view('game.game_start_modal', compact(
                 'top3', 
-                'best_time', 
+                'best_value', 
                 'stage_id', 
                 'title', 
                 'description',

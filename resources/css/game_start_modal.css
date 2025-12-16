@@ -11,7 +11,7 @@
 }
 
 /* モーダル本体 */
-.modal-content {
+.game-modal-content {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -20,14 +20,19 @@
     border: 10px solid #B67A20;     
     padding: 30px;
     border-radius: 12px;
-    width: 300px;
+    width: 350px;
     text-align: center;
 }
 
 /* モーダルタイトル */
 .modal-game-title {
-    color: #744805;
+    color: #744805;    
     border-bottom: 2px solid #B67A20;
+    margin-bottom: 8px;
+}
+
+.modal-game-title h5 {
+    font-weight: 700; /* 太字（600〜800で調整可） */
 }
 
 /* モーダル説明 */
@@ -38,6 +43,10 @@
 .top3-results {
     margin-bottom: 8px;
     border-bottom: 2px solid #B67A20;
+}
+
+.top3-results h6 {
+    font-weight: 700;
 }
 
 
@@ -117,7 +126,6 @@
 
 .back-btn {
     border: none;
-    font-size: 1.0rem;
 }
 
 
@@ -126,6 +134,7 @@
 .again-btn {
     display: inline-block; 
     padding: 10px 20px;
+    font-size: 1.0rem;
     background: #B67A20;
     color: white;
     border-radius: 8px;

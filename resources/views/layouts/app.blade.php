@@ -26,6 +26,7 @@
 
     {{-- 各ページ固有のviteファイルを読み込む --}}
     @stack('styles')
+
     @stack('scripts')
 
     <!-- Scripts -->

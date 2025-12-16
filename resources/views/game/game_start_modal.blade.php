@@ -1,15 +1,15 @@
 <div class="game-start-modal" id="modal">
 
-    <div class="modal-content">
+    <div class="game-modal-content">
 
         <!-- タイトル -->
         <div class="modal-game-title">
-            <h3>{{ $title }}</h3>
+            <h5>{{ $title }}</h5>
         </div>
 
         <!-- ゲーム説明 -->
         <div class="modal-game-explanation">
-            <h4>{{ $description }}</h4>
+            <h6>{{ $description }}</h6>
         </div>
         
         <!-- ゲーム結果 -->
@@ -18,7 +18,7 @@
             {{-- Top 3 表示 --}}
             <div class="top3-results">
                 
-                <h5>Top 3 Players</h5>
+                <h6>Top 3 Players</h6>
 
                 @if ($top3->isEmpty())
                     <p>No records yet</p>
@@ -43,7 +43,9 @@
                             </span>
 
                             <span class="rank-time">
-                                {{ number_format($result->best_time, 2) }}
+                                {{-- {{ number_format($result->best_time, 2) }} --}}
+                                {{-- {{ number_format($result->best_value, 2) }} --}}
+                                {{ rtrim(rtrim(number_format($result->best_value, 2), '0'), '.') }}
                                 {{ $unit }}
                             </span>
                             
@@ -59,9 +61,10 @@
                 <span class="trophy-col"></span>
                 <span class="label">You</span>
             
-                @if ($best_time !== null)
+                @if ($best_value !== null)
                     <span class="time">
-                        {{ number_format($best_time, 2) }}
+                        {{-- {{ number_format($best_time, 2) }} --}}
+                        {{ rtrim(rtrim(number_format($best_value, 2), '0'), '.') }}
                         {{ $unit }}
                     </span>
                 @else

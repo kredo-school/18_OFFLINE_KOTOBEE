@@ -9,7 +9,7 @@
 }         
 
 body {
-    background: #FFFFCE;
+    background-color: #FFFFCE !important;
     color: #000;
     display: flex;
     flex-direction: column; 

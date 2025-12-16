@@ -16,6 +16,10 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+/*** vocabゲーム：ゲームスタートmodal ***/
+Route::get('/vocab/start_page/{stage_id}', [HomeController::class, 'start_page'])
+    ->name('vocab.start_page');
+
 /* Vocabulary Game */
 Route::prefix('vocab')->middleware('auth')->group(function () {
 
@@ -53,6 +57,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/kana/options', [KanaGameController::class, 'options'])
         ->name('kana.options');
 
+    /*** kanaゲーム：ゲームスタート画面 ***/
+    Route::get('/kana/start_page/{setting_id}', [KanaGameController::class, 'start_page'])
+        ->name('kana.start_page');
+
     /*** ▼ kanaゲーム：設定 ID を指定してゲーム開始 ▼ ***/
     Route::get('/kana/start/{id}', [KanaGameController::class, 'start'])
         ->name('kana.start');
@@ -60,7 +68,6 @@ Route::middleware(['auth'])->group(function() {
     /*** ▼ kanaゲーム：結果データ保存 ▼ ***/
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
-
         
     ///////// Grammarゲーム //////////
     /*** grammarゲーム：ステージ選択画面 ***/
