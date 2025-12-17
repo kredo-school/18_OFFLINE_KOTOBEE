@@ -1,0 +1,160 @@
+/* 背景 */
+.game-start-modal {
+    /* display: none; */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+}
+
+/* モーダル本体 */
+.game-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFB728;
+    border: 10px solid #B67A20;     
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+}
+
+/* モーダルタイトル */
+.modal-game-title {
+    color: #744805;    
+    border-bottom: 2px solid #B67A20;
+    margin-bottom: 8px;
+}
+
+.modal-game-title h5 {
+    font-weight: 700; /* 太字（600〜800で調整可） */
+}
+
+/* モーダル説明 */
+.modal-game-explanation {
+    color: #744805;    
+}
+
+.top3-results {
+    margin-bottom: 8px;
+    border-bottom: 2px solid #B67A20;
+}
+
+.top3-results h6 {
+    font-weight: 700;
+}
+
+
+.rank-line {
+    display: flex;
+    align-items: center;
+    font-size: 1.0rem;
+    margin-bottom: 8px;
+    color: #4A2800;
+    list-style: none;
+    padding-left: 0;
+}
+
+/* ← 位置揃え用（固定幅） */
+.trophy-col {
+    width: 40px;          /* 全行で同じ幅 */
+    display: flex;
+    justify-content: center;
+}
+
+/* ← 見た目専用（今のCSSほぼそのまま） */
+.trophy-bg {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+    background: white;
+
+    box-shadow: 0 0 3px rgba(0,0,0,0.15);
+}
+
+.rank-name {
+    width: 120px;
+}
+
+.my-rank {
+    color: #e60033;
+    font-weight: bold;
+}
+
+.rank-time {
+    width: 120px;
+    text-align: right;
+}
+
+.my-best-time{
+    display:flex;
+    align-items:center;
+    font-size: 1.0rem;
+    margin-bottom: 20px;
+    color: #4A2800;
+    gap: 0;                 /* rank-line と揃えるなら 0 がきれい */
+}
+
+.my-best-time .label{
+    width:120px;            /* .rank-name と同じ */
+    font-weight:bold;
+}
+
+.my-best-time .time{
+    width:120px;            /* .rank-time と同じ */
+    text-align:right;
+}
+
+
+/* モーダルボタン全般 */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+
+.back-btn {
+    border: none;
+}
+
+
+/* モーダル各ボタン */
+.back-btn,
+.again-btn {
+    display: inline-block; 
+    padding: 10px 20px;
+    font-size: 1.0rem;
+    background: #B67A20;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* ボタンホバー時 */
+.back-btn:hover,
+.again-btn:hover {
+    background: #b36d04;
+}
+
+/* ボタン押す時 */
+.modal-buttons a:active {
+    transform: scale(0.96);
+}
+
+/* 押した時の青い出力を消す */
+a {
+    -webkit-tap-highlight-color: transparent;
+}
