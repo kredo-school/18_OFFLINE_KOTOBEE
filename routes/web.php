@@ -5,6 +5,7 @@ use App\Http\Controllers\VocabGameController;
 use App\Http\Controllers\GrammarGameController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KanaGameController;
+use App\Http\Controllers\StudentGroupController;
 
 /* --- 初期ページ --- */
 Route::get('/', function () {
@@ -78,5 +79,19 @@ Route::middleware(['auth'])->group(function() {
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-            
+
+    ///////// 生徒のグループ機能 /////////
+    
+    /*** グループ検索画面 ***/
+    Route::get('/group/search', [StudentGroupController::class, 'search'])
+        ->name('group.search');
+        
+    /*** グループ申請画面 ***/
+    Route::get('group/join/{group}', [StudentGroupController::class, 'join'])
+        ->name('group.join');
+
+    /*** グループ申請処理 ***/
+    Route::post('group/join/process/{group}', [StudentGroupController::class, 'join_submit'])
+        ->name('group.join.submit');
+
 });
