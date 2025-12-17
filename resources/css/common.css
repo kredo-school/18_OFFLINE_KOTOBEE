@@ -213,3 +213,27 @@ html, body {
         width: 350px;        /* PC は少し幅広く */
     }
 }
+
+/* use group/create.blade.php */
+.plan-bg {
+    background-color: #FFFFCE;
+    border: 0;
+}
+
+.plan-img {
+    width: 60%;
+    max-width: 130px;
+    height: auto;
+}
+
+.plan-box {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.plan-box input[type="radio"] {
+    margin-top: 5px;
+}
