@@ -21,6 +21,10 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+/*** vocabゲーム：ゲームスタートmodal ***/
+Route::get('/vocab/start_page/{stage_id}', [HomeController::class, 'start_page'])
+    ->name('vocab.start_page');
+
 /* Vocabulary Game */
 Route::prefix('vocab')->middleware('auth')->group(function () {
 
@@ -58,6 +62,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/kana/options', [KanaGameController::class, 'options'])
         ->name('kana.options');
 
+    /*** kanaゲーム：ゲームスタート画面 ***/
+    Route::get('/kana/start_page/{setting_id}', [KanaGameController::class, 'start_page'])
+        ->name('kana.start_page');
+
     /*** ▼ kanaゲーム：設定 ID を指定してゲーム開始 ▼ ***/
     Route::get('/kana/start/{id}', [KanaGameController::class, 'start'])
         ->name('kana.start');
@@ -88,16 +96,19 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
         ->name('grammar.stages');
 
-    /*** grammarゲーム：ゲーム開始用API ***/
-    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
-        ->name('grammar.start');
-    
+    /*** grammarゲーム：ゲームスタート画面 ***/
+    Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
+        ->name('grammar.start_page');
+
     /*** grammarゲーム：ゲーム画面表示用 ***/
-    Route::get('/grammar/play/{id}', [GrammarGameController::class, 'play'])
+    Route::get('/grammar/play/{stage_id}', [GrammarGameController::class, 'play'])
         ->name('grammar.play');
+
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');    
 
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
-            
 });

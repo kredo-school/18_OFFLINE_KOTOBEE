@@ -1,13 +1,23 @@
 @extends('layouts.game_stages')
-
-{{-- 固有css呼び出し --}}
-@push('styles')
-    @vite(['resources/css/game_stages.css'])
-@endpush
+{{-- @extends('layouts.app')  --}}
 
 {{-- 固有script呼び出し --}}
 @push('scripts')
     @vite(['resources/js/game_stages.js'])
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/js/game_start_modal.js'])
+    
+    {{-- 画面共通フォント --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+@endpush
+
+{{-- 固有css呼び出し --}}
+@push('styles')
+    @vite(['resources/css/common.css'])
+
+    @vite(['resources/css/game_stages.css'])
+    {{-- ゲーム開始時のmodal --}}
+    @vite(['resources/css/game_start_modal.css'])
 @endpush
 
 {{-- 内容 --}}
@@ -31,17 +41,16 @@
 {{-- 六角形作成 --}}
 <div class="circle-container" id="circle"></div>
 
+{{-- モーダル差し込み --}}
+<div id="start-modal-root"></div>
 
 {{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
 <script>
-    
-    // ステージ移動ためのurl配列
+
     window.stage_urls = @json(
         $stages->filter(fn($s) => $s->id % 5 == 1)
             ->sortBy('stage_id')
-            ->mapWithKeys(fn($s) => [
-                $s->stage_id => route('grammar.play', $s->stage_id)
-            ])
+            ->map(fn($s) => route('grammar.start_page', ['stage_id' => $s->stage_id]))
             ->values()
     );
 
@@ -54,44 +63,5 @@
 
 </script>
 
-
-
-{{-- <div class="container">
-    <h2 class="mb-4">Grammar Game stages</h2>
-    <table class="table table-boreded">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>created_by_admin_id</th>
-                <th>stage_id</th>
-                <th>note</th>
-                <th>image_url</th>
-                <th>correct_sentence</th>
-                <th></th>
-            </tr>            
-        </thead>
-
-        <tbody>
-            @foreach ($stages as $stage)
-                <tr>
-                    <td>{{ $stage->id }}</td>
-                    <td>{{ $stage->created_by_admin_id }}</td>
-                    <td>{{ $stage->stage_id }}</td>
-                    <td>{{ $stage->note }}</td>
-                    <td>{{ $stage->image_url }}</td>
-                    <td>{{ $stage->correct_sentence }}</td>
-                    <td>
-                        @if ($stage->id % 5 == 1)
-                            <a href="{{ route('grammar.play', $stage->stage_id )}}" class="btn btn-primary btn-sm">
-                                Start
-                            </a>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>    
-
-</div> --}}
-
 @endsection
+
