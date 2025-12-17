@@ -1,0 +1,108 @@
+.kb-main {
+    top: 37px; /* Navbar の高さ分だけ下げる */
+}
+
+/* =========================
+   Page Wrapper
+========================= */
+.group-search-container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #fbf7c7;
+    min-height: 100vh;
+}
+
+/* =========================
+   Title
+========================= */
+.group-search-title {
+    font-weight: 800;
+    font-size: 32px;
+    margin-bottom: 16px;
+}
+
+/* =========================
+   Search Form
+========================= */
+.group-search-form {
+    margin-bottom: 24px;
+}
+
+.group-search-form-inner {
+    display: flex;
+    gap: 8px;
+}
+
+.group-search-input {
+    flex: 1;
+    padding: 14px 12px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+}
+
+.group-search-button {
+    padding: 14px 14px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    background: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* =========================
+   Group Card Link
+========================= */
+.group-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 16px;
+}
+
+/* =========================
+   Group Card
+========================= */
+.group-card {
+    background: #fff;
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+/* =========================
+   Group Card Text
+========================= */
+.group-card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.group-card-note {
+    font-size: 18px;
+    color: #444;
+}
+
+/* =========================
+   Fake Button
+========================= */
+.group-card-action {
+    margin-top: 12px;
+}
+
+.group-card-action span {
+    display: inline-block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    font-weight: 700;
+}
+
+/* =========================
+   Empty Message
+========================= */
+.group-search-empty {
+    color: #666;
+}
