@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 
 ///// 仮のグループをseederで作成 /////
+
 class GroupsTableSeeder extends Seeder
 {   
     public function run(): void

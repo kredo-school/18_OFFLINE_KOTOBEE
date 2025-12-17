@@ -113,8 +113,7 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
 
-    ///////// 生徒のグループ機能 /////////
-    
+    ///////// 生徒のグループ機能 /////////    
     /*** グループ検索画面 ***/
     Route::get('/group/search', [StudentGroupController::class, 'search'])
         ->name('group.search');

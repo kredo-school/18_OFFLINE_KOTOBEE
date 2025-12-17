@@ -1,0 +1,73 @@
+.kb-main {
+    top: 37px; /* Navbar の高さ分だけ下げる */
+}
+
+.join-group-container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #fbf7c7;
+    min-height: 100vh;
+}
+
+.join-group-title {
+    font-size: 44px;
+    font-weight: 800;
+        margin-bottom: 18px;
+}
+
+.join-group-info {
+    margin-bottom: 28px;
+}
+
+.join-group-name {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.join-group-owner {
+    font-size: 28px;
+}
+
+.join-group-status {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.join-group-description {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.join-group-form {
+    width: 100%;
+}
+
+.join-group-input {
+    width: 100%;
+    padding: 14px 12px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 20px;
+}
+
+.join-group-error {
+    color: #b00020;
+    margin-top: 8px;
+}
+
+.join-group-submit {
+    width: 100%;
+    margin-top: 22px;
+    padding: 8px 12px;
+    border-radius: 18px;
+    border: 4px solid #9a6b28;
+    background: #f2a557;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    cursor: pointer;
+}
