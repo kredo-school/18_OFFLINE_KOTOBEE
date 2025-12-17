@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VocabGameController;
 use App\Http\Controllers\GrammarGameController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KanaGameController;
+
+// PayPal SDK check用に記述
+// use Srmklive\PayPal\Services\PayPal as PayPalClient;
+use App\Http\Controllers\PaymentController;
 
 /* --- 初期ページ --- */
 Route::get('/', function () {
@@ -60,6 +65,22 @@ Route::middleware(['auth'])->group(function() {
     /*** ▼ kanaゲーム：結果データ保存 ▼ ***/
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
+    
+    // Create Group 画面
+    Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
+    // 仮の GroupAdmin ダッシュボード画面
+    Route::get('/group/dashboard', function () {return 'Dashboard (Coming Soon)';})->name('group.dashboard');
+
+    // 送信（決済はまだ未実装）
+    Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
+    // Step1: 支払い開始
+    Route::get('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    // Step2: PayPalから戻る（成功）
+    Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    // Step3: キャンセル
+    Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+    // PayPal 完了コールバック
+    Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
 
 
     ///////// Grammarゲーム //////////
