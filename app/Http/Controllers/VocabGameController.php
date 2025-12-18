@@ -7,6 +7,7 @@ use App\Models\GameResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class VocabGameController extends Controller
@@ -142,35 +143,6 @@ class VocabGameController extends Controller
             ->with('correct', true);
     }
 
-
-
-
-    /**
-     * 並べ替えチェック
-     */
-    // public function checkKana(Request $request)
-    // {
-    //     $questions = session('vocab_questions', []);
-    //     $index = session('vocab_index', 0);
-    //     $current = $questions[$index];
-    //     $word = $current['word'];
-
-    //     $correct = implode('', $this->splitUnicodeChars($word->word));
-    //     $answer = $request->answer;
-
-    //     // 正解のみ last_answer を保存（画面に残すため）
-    //     if ($answer === $correct) {
-    //         session(['last_answer' => $answer]);
-    //         // 正解フラグをセットして戻す
-    //         return redirect()->route('vocab.show')->with('correct', true);
-    //     }
-
-    //     // 不正解の場合は last_answer を消して、choices をフルで再表示させる
-    //     session()->forget('last_answer');
-    //     // 不正解フラグだけセット
-    //     return redirect()->route('vocab.show')->with('error', true);
-    // }
-
     public function checkKana(Request $request)
     {
         $questions = session('vocab_questions', []);
@@ -202,17 +174,6 @@ class VocabGameController extends Controller
 
         return redirect()->route('vocab.show')->with('error', true);
     }
-
-
-
-
-
-    
-
-  
-
-
-
 
     /* --------------------------
         内部ロジック
@@ -298,7 +259,8 @@ class VocabGameController extends Controller
         $time = microtime(true) - $start;
         $time = min(round($time, 2), 9999.99);
 
-        $userId = Auth::id();
+        $user = auth()->user();
+        $userId = $user->id;
 
         // 結果を保存
         GameResult::create([
@@ -310,14 +272,34 @@ class VocabGameController extends Controller
             'play_time' => round($time, 2),
         ]);
 
+        // streak 更新（1日1回だけ増える仕様）
+        $today = Carbon::today();
+        $lastPlayed = $user->last_played_at
+            ? Carbon::parse($user->last_played_at)->startOfDay()
+            : null;
+
+        if (!$lastPlayed || !$lastPlayed->equalTo($today)) {
+
+            if ($lastPlayed && $lastPlayed->equalTo($today->copy()->subDay())) {
+                // 連続日
+                $user->streak += 1;
+            } else {
+                // 初回 or 途切れた
+                $user->streak = 1;
+            }
+
+            $user->last_played_at = $today;
+            $user->save();
+        }
+
+
         // ランキング処理
         $game_id = 2;
         $setting_id = null;
         $orderColumn = 'play_time';
         $orderDirection = 'asc'; // 小さい方が良い
 
-        // top3取得
-        $top3 = GameResult::with('user') // Userリレーションをロード
+        $top3 = GameResult::with('user')
             ->select('user_id', DB::raw("MIN($orderColumn) as best_value"))
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
@@ -332,13 +314,11 @@ class VocabGameController extends Controller
                 ];
             });
 
-        // 自分の最高記録
         $myBest = GameResult::where('user_id', $userId)
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
             ->min($orderColumn);
 
-        // 自分の順位
         $myRank = GameResult::select('user_id', DB::raw("MIN($orderColumn) as best_value"))
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
@@ -346,13 +326,14 @@ class VocabGameController extends Controller
             ->havingRaw("MIN($orderColumn) < ?", [$myBest])
             ->count() + 1;
 
-
+        // JSONで返す
         return response()->json([
             'saved' => true,
             'time' => round($time, 2),
             'my_best' => $myBest,
             'my_rank' => $myRank,
-            'top3' => $top3
+            'top3' => $top3,
+            'streak' => $user->streak,
         ]);
     }
 }

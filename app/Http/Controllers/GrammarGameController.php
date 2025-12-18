@@ -7,6 +7,7 @@ use App\Models\GrammarQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class GrammarGameController extends Controller
 { 
@@ -109,6 +110,27 @@ class GrammarGameController extends Controller
             'score' => null,
             'play_time' => $request->play_time         
         ]);
+
+
+        // streak 更新（1日1回だけ増える仕様）
+        $today = Carbon::today();
+        $lastPlayed = $user->last_played_at
+            ? Carbon::parse($user->last_played_at)->startOfDay()
+            : null;
+
+        if (!$lastPlayed || !$lastPlayed->equalTo($today)) {
+
+            if ($lastPlayed && $lastPlayed->equalTo($today->copy()->subDay())) {
+                // 連続日
+                $user->streak += 1;
+            } else {
+                // 初回 or 途切れた
+                $user->streak = 1;
+            }
+
+            $user->last_played_at = $today;
+            $user->save();
+        }
 
 
         // ユーザーのベストタイム
