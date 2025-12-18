@@ -8,6 +8,7 @@ use App\Models\GameResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class KanaGameController extends Controller
 {
@@ -218,6 +219,26 @@ class KanaGameController extends Controller
                 'score' => $request->score,
                 'play_time' => null,
             ]);
+
+            // streak 更新（1日1回だけ増える仕様）
+        $today = Carbon::today();
+        $lastPlayed = $user->last_played_at
+            ? Carbon::parse($user->last_played_at)->startOfDay()
+            : null;
+
+        if (!$lastPlayed || !$lastPlayed->equalTo($today)) {
+
+            if ($lastPlayed && $lastPlayed->equalTo($today->copy()->subDay())) {
+                // 連続日
+                $user->streak += 1;
+            } else {
+                // 初回 or 途切れた
+                $user->streak = 1;
+            }
+
+            $user->last_played_at = $today;
+            $user->save();
+        }
 
             // ランキング：score 高い順（DESC）
             $orderColumn = 'score';

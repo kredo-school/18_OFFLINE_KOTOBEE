@@ -1,0 +1,50 @@
+/* public/css/vocabulary.css */
+.vocab-wrapper {
+    padding: 20px;
+    background-color: #e9ecef;
+    min-height: 100vh;
+    border-radius: 25px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-arrow {
+    font-size: 24px;
+    margin-right: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 28px;
+    color: #4a3c2f;
+}
+
+.stage {
+    margin-bottom: 30px;
+}
+
+.stage h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.words {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.word-card {
+    background-color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 24px;
+    text-align: center;
+}

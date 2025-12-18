@@ -56,4 +56,18 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Group::class);
     }
+
+    // User.php
+public function gameResults()
+{
+    return $this->hasMany(GameResult::class, 'user_id');
+}
+//ユーザーがアカウント削除した場合
+protected static function booted()
+{
+    static::deleting(function ($user) {
+        $user->gameResults()->delete(); // 関連データも削除
+    });
+}
+
 }
