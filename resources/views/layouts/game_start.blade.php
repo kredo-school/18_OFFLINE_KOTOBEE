@@ -17,29 +17,15 @@
     {{-- font-awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- bootstrap cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Styles -->
-    @vite(['resources/css/common.css'])
-
     {{-- 各ページ固有のviteファイルを読み込む --}}
     @stack('styles')
-    @stack('scripts')
-</head>
 
+    @stack('scripts')
+
+</head>
 <body>
 
-    <!-- ========================== -->
-    <!--  Custom Navbar             -->
-    <!-- ========================== -->
-    @include('layouts.nav')
-    <!-- ========================== -->
-
-    <!-- Body Content -->
-    @yield('content')
-
-    @yield('scripts')
+    @yield('content')        
 
 </body>
 </html>

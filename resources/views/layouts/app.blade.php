@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-</head>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
 
-<!-- CSRF Token -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <title>{{ config('app.name') }} | @yield('title')</title>
 
@@ -23,9 +24,10 @@
 <!-- Styles -->
 @vite(['resources/css/common.css'])
 
-{{-- 各ページ固有のviteファイルを読み込む --}}
-@stack('styles')
-@stack('scripts')
+    {{-- 各ページ固有のviteファイルを読み込む --}}
+    @stack('styles')
+
+    @stack('scripts')
 
 <!-- Scripts -->
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -77,14 +79,14 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     @if (Auth::check())
                                         {{ Auth::user()->name }}
                                         {{-- 変更 --}}
                                     @endif
 
-                                    =======
+                         
                                     @if (Auth::check() && Auth::user()->avatar_url)
                                         {{-- 変更 --}}
                                         <!-- 画像の処理 -->
@@ -111,24 +113,24 @@
                                             @if (Auth::check() && !Auth::user()->group_id)
                                                 <a class="kb-menu-item" href="#">
                                                     Group Join
-                                                    >>>>>>> master
+                                           
                                                 </a>
                                             @endif
 
-                                            <<<<<<< HEAD <div class="dropdown-menu dropdown-menu-end"
+                                    <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="navbarDropdown">
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                                     onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                                     {{ __('Logout') }}
                                                 </a>
-                                                =======
+                                           
                                                 {{-- Logout --}}
                                                 <a class="kb-menu-item" href="{{ route('login') }}"
                                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                     Logout
                                                 </a>
-                                                >>>>>>> master
+                                                
 
                                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                                     class="d-none">
@@ -145,15 +147,14 @@
         <!-- ========================== -->
 
 
+        <!-- ========================== -->  
+        @include('layouts.nav')
+           
         <!-- Body Content -->
         <main class="kb-main">
             @yield('content')
+            @yield('scripts')
         </main>
-
     </div>
-
-    @yield('scripts')
-
 </body>
-
 </html>

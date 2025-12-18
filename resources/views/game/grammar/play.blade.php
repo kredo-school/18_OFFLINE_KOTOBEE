@@ -34,7 +34,7 @@
 
     <script>
         // ページ表示後に JSON API を叩いて、JS に渡す
-        fetch('/api/grammar/start/{{ $id }}')
+        fetch('/api/grammar/start/{{ $stage_id }}')
             .then(res => {
                 if (!res.ok) {
                     // ステータスコードをコンソールに出す
@@ -47,7 +47,8 @@
                 // ここでグローバル関数に渡す
                 window.startGrammarGame(data.data, data.stage_id);
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err)
+        );
     </script>
 
 @endsection

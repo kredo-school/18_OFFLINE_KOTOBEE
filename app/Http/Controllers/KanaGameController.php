@@ -22,6 +22,78 @@ class KanaGameController extends Controller
         return view('game.kana_options', compact('settings'));
     }
 
+    ///// ゲームスタートmodal /////
+    public function start_page(Request $request, $setting_id)
+    {
+        // ゲーム設定情報取り出し、ない場合404エラー
+        $game_setting = GameSetting::findOrFail($setting_id);
+
+        $user = Auth::user();
+        $game_id = 1;
+        $mode = $game_setting->mode;
+    
+        // modeごとの設定
+        if ($mode === '60s-count') {
+            $order_column = 'score';
+            $order_direction = 'desc';
+            $description = 'How many can you get in 60s?';
+            $unit = 'こ';
+
+            $top3 = GameResult::with('user')
+                ->select('user_id', DB::raw("MAX($order_column) as best_value"))
+                ->where('game_id', $game_id)
+                ->where('setting_id', $setting_id)
+                ->groupBy('user_id')
+                ->orderBy('best_value', $order_direction)
+                ->limit(3)
+                ->get();
+
+            $best_value = GameResult::where('user_id', $user->id)
+                ->where('game_id', $game_id)
+                ->where('setting_id', $setting_id)
+                ->max($order_column);
+
+        } elseif ($mode === 'timeattack') {
+            $order_column = 'play_time';
+            $order_direction = 'asc';
+            $description = 'How many seconds does it take to get everything?';
+            $unit = 'sec';
+
+            $top3 = GameResult::with('user')
+                ->select('user_id', DB::raw("MIN($order_column) as best_value"))
+                ->where('game_id', $game_id)
+                ->where('setting_id', $setting_id)
+                ->groupBy('user_id')
+                ->orderBy('best_value', $order_direction)
+                ->limit(3)
+                ->get();
+
+            $best_value = GameResult::where('user_id', $user->id)
+                ->where('game_id', $game_id)
+                ->where('setting_id', $setting_id)
+                ->min($order_column);            
+        }
+
+        // ゲームタイトル
+        $title = 'Kana Game';
+
+        // ゲーム開始url
+        $play_url = route('kana.start', $setting_id);
+
+        // modal出力
+        if ($request->ajax()) {
+            return view('game.game_start_modal', compact(
+                'top3',
+                'best_value',
+                'title',
+                'description',
+                'unit',
+                'play_url'
+            ));
+        }
+    
+        return redirect()->route('kana.options');
+    }    
 
     /**
      * ② 選択された設定でゲーム開始
