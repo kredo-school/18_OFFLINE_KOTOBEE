@@ -56,4 +56,17 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Group::class);
     }
+
+    // ユーザが管理者である場合、保持しているグループ一覧
+    public function my_groups()
+    {
+        return $this->hasMany(Group::class, 'owner_id');
+    }
+
+    // ユーザがプレイしたゲーム結果一覧
+    public function game_results()
+    {
+        return $this->hasMany(GameResult::class, 'user_id');
+    }
+
 }
