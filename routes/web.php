@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\GrammarController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VocabGameController;
 use App\Http\Controllers\GrammarGameController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KanaGameController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VocabularyController;
 use App\Http\Controllers\StudentGroupController;
 
 // PayPal SDK check用に記述
@@ -13,6 +16,7 @@ use App\Http\Controllers\StudentGroupController;
 use App\Http\Controllers\PaymentController;
 
 /* --- 初期ページ --- */
+
 Route::get('/', function () {
     return redirect()->route('login');
 })->middleware('guest');
@@ -36,7 +40,7 @@ Route::prefix('vocab')->middleware('auth')->group(function () {
     // 現在の問題表示
     Route::get('/question', [VocabGameController::class, 'showQuestion'])
         ->name('vocab.show');
-    
+
     // 4択チェック
     Route::post('/check-choice', [VocabGameController::class, 'checkChoice'])
         ->name('vocab.checkChoice');
@@ -48,11 +52,10 @@ Route::prefix('vocab')->middleware('auth')->group(function () {
     Route::post('/vocab/next', [VocabGameController::class, 'next'])->name('vocab.next');
 
     Route::get('/vocab/finish', [VocabGameController::class, 'finish'])->name('vocab.finish');
-
 });
 
 /* --- Auth 後の画面 --- */
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
 
     /*** ▼ ゲーム選択画面（ログイン後に最初に表示） ▼ ***/
     Route::get('/game/select', function () {
@@ -101,6 +104,9 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
         ->name('grammar.stages');
 
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');
     /*** grammarゲーム：ゲームスタート画面 ***/
     Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
         ->name('grammar.start_page');
@@ -117,6 +123,14 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
         ->name('grammar.save_result');
 
+    //////profile///////
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabulary.index');
+    Route::get('/grammar', [GrammarController::class, 'index'])->name('grammar.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/edit', [ProfileController::class, 'update']) ->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
     ///////// 生徒のグループ機能 /////////    
     /*** グループ検索画面 ***/
     Route::get('/group/search', [StudentGroupController::class, 'search'])
