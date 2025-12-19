@@ -1,13 +1,18 @@
 @extends('layouts.app')
 
+{{-- admin sidebar --}}
+@section('admin_sidebar')
+    @include('layouts.admin_side_bar')
+@endsection
+
+
 @section('content')
-    <h1>Group Dashboard</h1>
+    {{-- <h1>Group Dashboard</h1> --}}
 
     {{-- Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @php
-
         // カナゲーム共通セット
         $subtypes = ['seion', 'dakuon', 'youon'];
 
@@ -44,12 +49,12 @@
     @endphp
 
     {{-- 60s-count 平均 --}}
-    <div style="max-width: 900px; margin: 12px 0;">
+    <div style="max-width: 900px; margin: 12px auto;">
         <canvas id="{{ $kana_game_60s_avg_id }}"></canvas>
     </div>
 
     {{-- time_attack 平均 --}}
-    <div style="max-width: 900px; margin: 12px 0;">
+    <div style="max-width: 900px; margin: 12px auto;">
         <canvas id="{{ $kana_game_avg_time_attacks_id }}"></canvas>
     </div>
 

@@ -40,7 +40,7 @@ class LoginController extends Controller
         $group = $user->my_groups()->latest('created_at')->first();
 
         if ($group) {
-            return '/group/dashboard/'.$group->id.'';
+            return route('group.dashboard', ['id' => $group->id]);
         }
 
         return '/game/select';

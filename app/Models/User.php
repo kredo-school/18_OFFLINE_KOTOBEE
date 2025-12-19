@@ -50,7 +50,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    
     // Relations. ユーザのグループidからグループ名などを取得する
     public function group()
     {
@@ -74,7 +74,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(GameResult::class, 'user_id');
     }
-    
+
     //ユーザーがアカウント削除した場合
     protected static function booted()
     {
