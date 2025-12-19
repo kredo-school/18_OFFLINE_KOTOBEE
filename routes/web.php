@@ -77,11 +77,15 @@ Route::middleware(['auth'])->group(function () {
     /*** ▼ kanaゲーム：結果データ保存 ▼ ***/
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
-    
-    // Create Group 画面
-    Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
-    // 仮の GroupAdmin ダッシュボード画面
-    Route::get('/group/dashboard', function () {return 'Dashboard (Coming Soon)';})->name('group.dashboard');
+        
+    ///////// グループ管理 //////////
+    /*** Create Group 画面 ***/
+    Route::get('/group/create', [GroupController::class, 'create'])
+        ->name('group.create');
+
+    /*** GroupAdmin ダッシュボード画面 ***/    
+    Route::get('/group/dashboard/{id}', [GroupController::class, 'show'])
+        ->name('group.dashboard');
 
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');

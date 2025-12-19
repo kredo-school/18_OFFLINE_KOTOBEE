@@ -21,4 +21,9 @@ class GameResult extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function game_setting()
+    {
+        return $this->belongsTo(GameSetting::class, 'setting_id');
+    }
 }
