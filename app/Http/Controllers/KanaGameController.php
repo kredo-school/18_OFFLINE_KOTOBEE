@@ -263,9 +263,11 @@ class KanaGameController extends Controller
         /**
          * ② ランキング（ユーザーごと最高値）
          */
+        $aggregate = ($orderDirection === 'asc') ? 'MIN' : 'MAX';
+
         $top3 = GameResult::select(
                 'user_id',
-                DB::raw("MIN($orderColumn) as best_value") // ASC なら MIN、DESC なら MAX
+                DB::raw("$aggregate($orderColumn) as best_value") // ASC なら MIN、DESC なら MAX
             )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
@@ -286,19 +288,23 @@ class KanaGameController extends Controller
         $myBest = GameResult::where('user_id', $user->id)
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
-            ->min($orderColumn);  // ASC＝min, DESC＝max と同じ動き
+            ->{$orderDirection === 'asc' ? 'min' : 'max'}($orderColumn);
 
         /**
          * ④ 自分の順位
          */
         $myRank = GameResult::select(
                 'user_id',
-                DB::raw("MIN($orderColumn) as best_value")
+                DB::raw("$aggregate($orderColumn) as best_value")
             )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
             ->groupBy('user_id')
-            ->having('best_value', $orderDirection === 'asc' ? '<' : '>', $myBest)
+            ->having(
+                'best_value',
+                $orderDirection === 'asc' ? '<' : '>',
+                $myBest
+            )
             ->count() + 1;
 
         return response()->json([
