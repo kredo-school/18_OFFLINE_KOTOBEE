@@ -86,6 +86,28 @@ Route::middleware(['auth'])->group(function () {
     /*** GroupAdmin ダッシュボード画面 ***/    
     Route::get('/group/dashboard/{id}', [GroupController::class, 'show'])
         ->name('group.dashboard');
+    
+    /*** GroupAdmin 参加承認or拒否画面***/
+    Route::get('/group/approval/{id}', [GroupController::class, 'applicants_show'])
+        ->name('group.applicants');
+
+    /*** GroupAdmin 参加承認の処理(複数) ***/
+    Route::post('/group/{group}/approval/bulk', [GroupController::class, 'applicant_bulk_approval'])
+        ->name('group.applicant.bulk.approval');
+
+    /*** GroupAdmin 参加拒否の処理(複数) ***/
+    Route::post('/group/{group}/deny/bulk', [GroupController::class, 'applicant_bulk_deny'])
+        ->name('group.applicant.bulk.deny');
+    
+    /*** GroupAdmin 参加承認の処理　***/
+    Route::post('/group/{group}/approval/{user}', [GroupController::class, 'applicant_approval'])
+        ->name('group.applicant.approval');
+
+    /*** GroupAdmin 参加拒否の処理 ***/
+    Route::post('/group/{group}/deny/{user}', [GroupController::class, 'applicant_deny'])
+        ->name('group.applicant.deny');    
+    
+    
 
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');

@@ -22,8 +22,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Styles -->
-    @vite(['resources/css/common.css'])
-    @stack('styles')     
+    @vite(['resources/css/common.css'])      
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -44,10 +43,14 @@
             @yield('content')
         </main>
 
-    </div>
-
-    {{-- 各ページ固有のviteファイルを読み込む --}}
-    @stack('scripts')
+    </div>   
 
 </body>
+
+
+{{-- 各ページ固有のviteファイルを読み込む --}}
+@stack('styles')  
+@stack('scripts')
+
+
 </html>
