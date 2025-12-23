@@ -29,9 +29,13 @@
     <!-- Center -->
     <div class="kb-center">
         @auth
-            @if (Auth::user()->group_id)
+            @php
+                $approved_group = Auth::user()->approved_group();
+            @endphp
+
+            @if ($approved_group)
                 <span class="kb-group-name">
-                    {{ Auth::user()->group->name ?? '' }}
+                    {{ $approved_group->name }}
                 </span>
             @endif
         @endauth
