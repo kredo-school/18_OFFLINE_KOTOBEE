@@ -165,6 +165,17 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         });
 
+        // バッジ獲得情報の表示
+        if (data.badge) {
+            html += `
+                <hr>
+                <div class="badge-win">
+                    <p>${data.badge.name_hiragana} をゲットしました！🎉</p>
+                    <img src="/storage/images/badges_modal/${data.badge.file_name}" class="badge-spin">
+                </div>
+            `;
+        }
+
         content.innerHTML = html;
         modal.style.display = "block";
     }

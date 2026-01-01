@@ -391,3 +391,18 @@ html, body {
     .sidebar h2{ font-size: 24px; }
     .menu a{ font-size: 17px; }
   }
+
+  /* バッジ獲得アニメーション */
+  .badge-spin {
+      width: 120px;
+      animation: spin 1s ease-out 1;
+  }
+
+  @keyframes spin {
+      from {
+          transform: rotateY(0deg);
+      }
+      to {
+          transform: rotateY(360deg);
+      }
+  }

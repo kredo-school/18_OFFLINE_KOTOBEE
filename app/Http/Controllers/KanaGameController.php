@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Services\BadgeService;
 
 class KanaGameController extends Controller
 {
@@ -307,12 +308,18 @@ class KanaGameController extends Controller
             )
             ->count() + 1;
 
-        return response()->json([
+            // バッジ付与処理の追加
+            $badgeService = new BadgeService();
+            $badge = $badgeService->giveNextBadge($user);
+
+            // モーダル表示用の情報を返す
+            return response()->json([
             'saved'       => true,
             'mode'        => $mode,
             'top3'        => $top3,
             'my_best'     => $myBest,
-            'my_rank'     => $myRank
+            'my_rank'     => $myRank,
+            'badge'       => $badge,
         ]);
     }
 }
