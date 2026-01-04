@@ -190,3 +190,23 @@
     cursor: pointer;
     font-size: 1rem;
 }
+
+/* Kana-Optionブレード用のcss */
+/* 未実施（デフォルト白） */
+.option-played td {
+    background-color: #FFB728 !important;
+}
+
+/* 実施済み */
+.option-not-played td {
+    background-color: #ffffff;
+}
+
+/* ヘッダー色変更 */
+.table thead th {
+    background-color: #E6A73C !important;   /* 濃いめの黄色 */
+    color: #3A2A1F;                         /* 既存UIと合わせた濃い茶 */
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid #C48A28;
+}

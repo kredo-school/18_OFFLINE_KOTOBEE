@@ -18,9 +18,25 @@ class KanaGameController extends Controller
      */
     public function options()
     {
-        $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更        
+        $userId = Auth::id();
 
-        return view('game.kana_options', compact('settings'));
+        // option 表示用
+        $settings = GameSetting::where('game_id', 1)->get();
+
+        // 実施済み setting_id を配列で取得
+        $playedSettingIds = GameResult::where('user_id', $userId)
+            ->where('game_id', 1)
+            ->pluck('setting_id')
+            ->unique()
+            ->toArray();
+
+        return view('game.kana_options', compact(
+            'settings',
+            'playedSettingIds'
+        ));
+        // $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更        
+
+        //     return view('game.kana_options', compact('settings'));
     }
 
     ///// ゲームスタートmodal /////
