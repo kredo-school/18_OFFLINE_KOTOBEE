@@ -16,7 +16,16 @@ class ProfileController extends Controller
         $user = auth()->user();
         $streak = $user->streak;  // ←DBカラム名に合わせる
 
-        return view('profile.profile', compact('user', 'streak'));
+        // 2026/1/1 バッジ表示ため以下を追加（ただし）
+        $prefectureId = $user->prefecture_id ?? 0;
+
+        // prefecture_id 以下のバッジを取得
+        $badges = \DB::table('badges')
+            ->where('id', '<=', $prefectureId)
+            ->orderBy('id')
+            ->get();
+
+        return view('profile.profile', compact('user', 'streak', 'badges'));
     }
 
 

@@ -4,6 +4,16 @@
 
 <div class="login-wrapper">
 
+    <!-- Catch Copy -->
+    <div class="login-catchcopy">
+        <div class="login-catchcopy-en">
+            Learn Japanese through games.
+        </div>
+        <div class="login-catchcopy-ja">
+            ゲームで日本語を学ぼう！
+        </div>
+    </div>
+
     <!-- KotoBee Title -->
     <h1 class="login-title">KotoBee</h1>
 

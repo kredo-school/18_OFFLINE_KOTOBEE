@@ -6,6 +6,11 @@
 
     <h1 class="game-select-title">Game Select</h1>
 
+    {{-- Japanese subtitle --}}
+    <div class="game-select-subtitle">
+        ゲームをえらんでね！
+    </div>
+
     <ul class="game-menu">
         <li>
             <a href="{{ route('kana.options') }}" class="game-menu-btn">
@@ -34,11 +39,22 @@
     margin-top: 50px;
 }
 
+/* Title */
 .game-select-title {
     font-size: 2rem;
+    margin-bottom: 5px;
+    color: #5a4a2f;   /* ★ loginと合わせた茶系 */
+}
+
+/* Subtitle (Japanese) */
+.game-select-subtitle {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #6b6b6b;
     margin-bottom: 30px;
 }
 
+/* Menu */
 .game-menu {
     list-style: none;
     padding: 0;
@@ -48,9 +64,11 @@
     margin-bottom: 20px;
 }
 
+/* Buttons */
 .game-menu-btn {
     display: inline-block;
-    padding: 12px 30px;
+    width: 260px;           /* ★ 横幅統一 */
+    padding: 14px 0;
     background: #B67A20;
     color: white;
     border-radius: 10px;

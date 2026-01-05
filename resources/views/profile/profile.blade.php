@@ -63,5 +63,22 @@
     </div>
 </div>
 
+{{-- ===== Badges Japan Map Area 2026/1/1 (add:Tadashi)===== --}}
+<div class="badge-map-wrapper">
+    <h3 class="badge-title">獲得バッジ - Japan Map</h3>
+
+    <div class="japan-map-container">
+
+        {{-- 白地図 --}}
+        <img src="{{ asset('storage/images/badges/white_map.svg') }}" class="japan-base-map">
+
+        {{-- 取得県だけ重ねる --}}
+        @foreach($badges as $badge)
+            <img src="{{ asset('storage/images/badges/'.$badge->file_name) }}"
+                 class="badge-prefecture badge-{{ $badge->id }}">
+        @endforeach
+
+    </div>
+</div>
 
 @endsection

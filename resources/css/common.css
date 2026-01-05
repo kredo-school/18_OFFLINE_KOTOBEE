@@ -120,14 +120,35 @@ html, body {
     margin-top: 20px;
 }
 
+/* ===== Login Catch Copy ===== */
+.login-catchcopy {
+    text-align: center;
+    margin-bottom: 5px; /* KotoBee との距離 */
+}
+
+.login-catchcopy-en {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #5a4a2f; /* 落ち着いたブラウン系 */
+    letter-spacing: 0.02em;
+}
+
+.login-catchcopy-ja {
+    font-size: 1rem;
+    font-style: italic;
+    color: #6b6b6b;
+    margin-top: 2px;
+}
+
 /* "KotoBee" タイトル */
 .login-title {
     color: #744805;
-    font-size: 42px;
+    font-size: 38px;
     font-weight: bold;
     text-align: center;
-    margin-top: 90px;
-    margin-bottom: 40px;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 /* Bee イラスト */
@@ -394,4 +415,19 @@ html, body {
     :root{ --sidebar-w: 82vw; }
     .sidebar h2{ font-size: 24px; }
     .menu a{ font-size: 17px; }
+  }
+
+  /* バッジ獲得アニメーション */
+  .badge-spin {
+      width: 120px;
+      animation: spin 1s ease-out 1;
+  }
+
+  @keyframes spin {
+      from {
+          transform: rotateY(0deg);
+      }
+      to {
+          transform: rotateY(360deg);
+      }
   }
