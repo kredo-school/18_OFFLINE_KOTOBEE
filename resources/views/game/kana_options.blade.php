@@ -16,14 +16,21 @@
 @section('content')
 <div class="container">
 
-    <h2 class="mb-4">Kana Game Options</h2>
+    <h2 class="kana-options-title">Kana Game Options</h2>
+
+    {{-- 説明文 --}}
+    <div class="kana-options-description">
+        <p class="desc-main">ゲームをえらんでね！</p>
+        <p class="desc-main">ひらがな、カタカナをれんしゅうします。</p>
+        <p class="desc-sub">60s-count：何個（なんこ）わかるかな？</p>
+        <p class="desc-sub">time-attack：何秒（なんびょう）で できるかな？</p>
+    </div>
 
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Mode</th>
-                {{-- <th>Order</th> --}}
                 <th>Script</th>
                 <th>Subtype</th>
                 <th></th>
@@ -50,28 +57,6 @@
                 </tr>
             @endforeach
         </tbody>
-        {{-- <tbody>
-            @foreach($settings as $setting)
-            <tr>
-                <td>{{ $setting->id }}</td>
-                <td>{{ $setting->mode }}</td>
-                {{-- <td>{{ $setting->order_type }}</td> --}}
-                {{-- <td>{{ $setting->script }}</td>
-                <td>{{ $setting->subtype }}</td>
-                <td> --}}
-                    {{-- <a href="{{ route('kana.start', $setting->id) }}" 
-                       class="btn btn-primary btn-sm">
-                        Start
-                    </a> --}}
-
-                    {{-- <a href="{{ route('kana.start_page', $setting->id) }}" 
-                        class="btn btn-primary btn-sm js-open-start-modal">
-                        Start
-                    </a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody> --}}
     </table>
 
 </div>
