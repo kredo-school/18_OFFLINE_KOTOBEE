@@ -83,4 +83,13 @@ class User extends Authenticatable
         });
     }
 
+    // グループに承認されているか
+    public function approved_group()
+    {
+        return $this->belongsToMany(Group::class, 'group_members')
+            ->wherePivot('status', 2)
+            ->withPivot('status')
+            ->first();
+    }
+
 }

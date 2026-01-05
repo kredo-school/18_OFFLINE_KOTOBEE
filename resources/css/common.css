@@ -389,8 +389,12 @@ html, body {
   .menu a i{
     width: 22px;
     text-align: center;
-    color: var(--muted);
+    color: var(--muted) !important;
     font-size: 18px;
+  }
+
+  .sidebar .menu a i{
+    color: var(--muted) !important;
   }
 
   .menu a:hover{

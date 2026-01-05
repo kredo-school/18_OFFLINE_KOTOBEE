@@ -11,11 +11,15 @@
 
     <nav class="menu">
         @if(isset($group))
-            <a href="{{ route('group.dashboard', ['id' => $group->id]) }}" class="active">
+            <a href="{{ route('group.dashboard', ['id' => $group->id]) }}" 
+               class="{{ request()->routeIs('group.dashboard') ? 'active' : '' }}">
                 <i class="fa-regular fa-window-maximize"></i>Dashboard
             </a>
+            <a href="{{ route('group.applicants', ['id' => $group->id]) }}"
+               class="{{ request()->routeIs('group.applicants') ? 'active' : '' }}">
+                <i class="fa-regular fa-user"></i>Members
+            </a>
         @endif
-        <a href="#"><i class="fa-regular fa-user"></i>Members</a>
         <a href="#"><i class="fa-solid fa-chart-column"></i>Performance</a>
         <a href="#"><i class="fa-regular fa-comment-dots"></i>Awards</a>
         <a href="#"><i class="fa-regular fa-envelope"></i>Messages</a>
@@ -56,7 +60,7 @@
                 document.querySelectorAll(".menu a").forEach(x => x.classList.remove("active"));
                 a.classList.add("active");
             });
-        });        
+        });       
     </script>
 @endpush
 

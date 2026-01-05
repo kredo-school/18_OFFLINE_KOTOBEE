@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -55,10 +57,14 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        /*** カナゲーム用のグラフ作成 ***/
+        /*** カナゲーム用のグラフ作成 ***/        
         $group = Group::with([
+            'users' => function ($q) {
+                $q->wherePivot('status', 2);
+            },
             'users.game_results.game_setting'
-        ])->findOrFail($id);        
+        ])->findOrFail($id);
+                
         $subtypes = ['seion', 'dakuon', 'youon'];
         $scripts  = ['hiragana', 'katakana'];
 
@@ -83,7 +89,7 @@ class GroupController extends Controller
                 // 最大値の平均を計算
                 $avg_scores_60s[$script][$subtype] = $user_max_scores->isEmpty() ? 0 : round($user_max_scores->avg(), 2);
             }
-        }
+        }        
         // dd($avg_scores_60s);
 
 
@@ -108,10 +114,91 @@ class GroupController extends Controller
                 $avg_time_attacks[$script][$subtype] = $user_max_scores->isEmpty() ? 0 : round($user_max_scores->avg(), 2);
             }
         }
-
-
-
-
         return view('groups.dashboard', compact('group', 'avg_scores_60s', 'avg_time_attacks'));
+    }
+
+    /**
+     * 参加申請者表示画面
+     */
+    public function applicants_show($id)
+    {
+        $group = Group::findOrFail($id);       
+        
+        $applicants = $group->users()
+            ->orderByPivot('status', 'asc')
+            ->orderByPivot('created_at', 'asc')
+            ->get();
+
+        return view('groups.applicants', compact('group', 'applicants'));
+    }
+
+    /**
+     * 参加申請処理
+     */
+    public function applicant_approval(Group $group, User $user)
+    {        
+        // グループadminが操作しているか
+        abort_unless($group->owner_id === Auth::id(), 403);
+
+        DB::table('group_members')
+            ->where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->update(['status' => 2]);
+
+        return back()->with('success', 'Approved.');
+    }
+
+    /**
+     * 参加拒否処理
+     */
+    public function applicant_deny(Group $group, User $user)
+    {
+        // グループadminが操作しているか
+        abort_unless($group->owner_id === Auth::id(), 403);
+
+        DB::table('group_members')
+            ->where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->delete();
+        
+        return back()->with('success', 'Denied.');
+    }
+
+    /**
+     * 参加申請処理(複数)
+     */
+    public function applicant_bulk_approval(Request $request, Group $group)
+    {        
+        abort_unless(Auth::check(), 401);
+        abort_unless($group->owner_id === Auth::id(), 403);
+
+        // user_idの配列作成
+        $user_ids = explode(',', $request->user_ids);
+
+        DB::table('group_members')
+            ->where('group_id', $group->id)
+            ->whereIn('user_id', $user_ids)
+            ->update(['status' => 2]);
+            
+        return back()->with('success', 'Selected users approved.');
+    }
+
+    /**
+     * 参加拒否処理(複数)
+     */
+    public function applicant_bulk_deny(Request $request, Group $group)
+    {
+        abort_unless(Auth::check(), 401);
+        abort_unless($group->owner_id === Auth::id(), 403);
+        
+        // user_idの配列作成
+        $user_ids = explode(',', $request->user_ids);
+
+        DB::table('group_members')
+            ->where('group_id', $group->id)
+            ->whereIn('user_id', $user_ids)
+            ->delete();
+            
+        return back()->with('success', 'Selected users denied.');
     }
 }

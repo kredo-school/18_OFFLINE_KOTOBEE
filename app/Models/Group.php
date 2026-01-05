@@ -21,7 +21,7 @@ class Group extends Model
             'group_id',
             'user_id',
         )
-        ->withPivot('status')
+        ->withPivot(['status', 'created_at'])
         ->withTimestamps();
     }
 
@@ -29,6 +29,11 @@ class Group extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    // public function members()
+    // {
+    //     return $this->hasMany(GroupMember::class);
+    // }
 
 
 }
