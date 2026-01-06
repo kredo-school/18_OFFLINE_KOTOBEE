@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentGroupController extends Controller
 {
+
+    // 検索画面
     public function search(Request $request)
     {
         $keyword = $request->query('keyword'); // GETパラメータ
@@ -26,11 +28,13 @@ class StudentGroupController extends Controller
         return view('group_student.search', compact('groups', 'keyword'));
     }
 
+    // 参加画面
     public function join(Group $group)
     {
         return view('group_student.join', compact('group'));
     }
     
+    // 参加画面から申請処理
     public function join_submit(Request $request, Group $group) 
     {        
         $user_id = Auth::id();

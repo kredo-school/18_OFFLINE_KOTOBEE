@@ -32,11 +32,18 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    <!-- bootstrap cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Styles -->
+    @vite(['resources/css/common.css'])      
 
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
+
     <div id="app">
 
         <!-- ========================== -->
@@ -153,9 +160,10 @@
         <!-- Body Content -->
         <main class="kb-main">
             @yield('content')
-            @yield('scripts')
         </main>
-    </div>
+
+    </div>   
+
 </body>
 
 </html>

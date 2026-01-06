@@ -5,6 +5,7 @@
     use App\Http\Controllers\Controller;
     use Illuminate\Foundation\Auth\AuthenticatesUsers;
     use Illuminate\Support\Facades\Auth;
+    // use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -25,9 +26,25 @@ class LoginController extends Controller
      * Where to redirect users after login.
      *
      * @var string
-     */
-    protected $redirectTo = '/game/select';
+     */    
+
+    // ログインした際のダイレクト先
+    // protected $redirectTo = '/game/select';    
     // protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        /** @var User $user */        
+        $user = Auth::user();
+
+        // もしグループ管理者だった場合、複数あるグループのうちの最新のグループに移動する
+        $group = $user->my_groups()->latest('created_at')->first();
+
+        if ($group) {
+            return route('group.dashboard', ['id' => $group->id]);
+        }
+
+        return '/game/select';
+    }
 
     /**
      * Create a new controller instance.

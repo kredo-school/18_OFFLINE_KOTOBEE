@@ -120,14 +120,35 @@ html, body {
     margin-top: 20px;
 }
 
+/* ===== Login Catch Copy ===== */
+.login-catchcopy {
+    text-align: center;
+    margin-bottom: 5px; /* KotoBee との距離 */
+}
+
+.login-catchcopy-en {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #5a4a2f; /* 落ち着いたブラウン系 */
+    letter-spacing: 0.02em;
+}
+
+.login-catchcopy-ja {
+    font-size: 1rem;
+    font-style: italic;
+    color: #6b6b6b;
+    margin-top: 2px;
+}
+
 /* "KotoBee" タイトル */
 .login-title {
     color: #744805;
-    font-size: 42px;
+    font-size: 38px;
     font-weight: bold;
     text-align: center;
-    margin-top: 90px;
-    margin-bottom: 40px;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 /* Bee イラスト */
@@ -237,3 +258,176 @@ html, body {
 .plan-box input[type="radio"] {
     margin-top: 5px;
 }
+
+
+
+:root{
+    --sidebar-w: 280px;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --active-bg: #eaf1ff;
+    --active-text: #1e40af;
+    --border: rgba(17, 24, 39, 0.08);
+  }
+
+  body{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background: #fff;
+    color: var(--text);
+  }
+
+  /* 開くボタン */
+  .open-btn{
+    position: fixed;
+    top: 65px;
+    left: 0px;
+
+    margin: 20px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    z-index: 1101;
+  }
+
+  /* オーバーレイ */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 1100;
+  }
+  .overlay.active{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* サイドバー本体 */
+  .sidebar{
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: var(--sidebar-w);
+    height: calc(100vh - 60px);
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    box-shadow: 18px 0 40px rgba(0,0,0,0.08);
+
+    transform: translateX(-110%);
+    transition: transform .28s ease;
+    z-index: 1300;   
+
+    padding: 28px 18px;
+    box-sizing: border-box;
+  }
+  .sidebar.active{
+    transform: translateX(0);
+  }
+
+  /* タイトル */
+  .sidebar h2{
+    margin: 0 0 18px 0;
+    padding: 6px 10px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    color: #111827;
+  }
+
+  /* 閉じるボタン（右上） */
+  .close-btn{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(17, 24, 39, 0.06);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 36px;
+    color: #111827;
+  }
+  .close-btn:hover{
+    background: rgba(17, 24, 39, 0.10);
+  }
+
+  /* メニュー */
+  .menu{
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 6px;
+  }
+
+  .menu a{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    text-decoration: none;
+    color: var(--text);
+
+    padding: 12px 12px;
+    border-radius: 14px;
+
+    font-size: 18px;
+    line-height: 1;
+    transition: background .15s ease, color .15s ease;
+  }
+
+  .menu a i{
+    width: 22px;
+    text-align: center;
+    color: var(--muted) !important;
+    font-size: 18px;
+  }
+
+  .sidebar .menu a i{
+    color: var(--muted) !important;
+  }
+
+  .menu a:hover{
+    background: rgba(31, 41, 55, 0.06);
+  }
+
+  /* 選択中（画像の“青い帯”） */
+  .menu a.active{
+    background: var(--active-bg) !important;
+    color: var(--active-text) !important;
+  }
+  .menu a.active i{
+    color: var(--active-text) !important;
+  }
+
+  /* スマホ：幅を固定→可変に */
+  @media (max-width: 480px){
+    :root{ --sidebar-w: 82vw; }
+    .sidebar h2{ font-size: 24px; }
+    .menu a{ font-size: 17px; }
+  }
+
+  /* バッジ獲得アニメーション */
+  .badge-spin {
+      width: 120px;
+      animation: spin 1s ease-out 1;
+  }
+
+  @keyframes spin {
+      from {
+          transform: rotateY(0deg);
+      }
+      to {
+          transform: rotateY(360deg);
+      }
+  }

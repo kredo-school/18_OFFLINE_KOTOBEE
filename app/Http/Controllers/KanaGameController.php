@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Services\BadgeService;
 
 class KanaGameController extends Controller
 {
@@ -17,9 +18,25 @@ class KanaGameController extends Controller
      */
     public function options()
     {
-        $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更        
+        $userId = Auth::id();
 
-        return view('game.kana_options', compact('settings'));
+        // option 表示用
+        $settings = GameSetting::where('game_id', 1)->get();
+
+        // 実施済み setting_id を配列で取得
+        $playedSettingIds = GameResult::where('user_id', $userId)
+            ->where('game_id', 1)
+            ->pluck('setting_id')
+            ->unique()
+            ->toArray();
+
+        return view('game.kana_options', compact(
+            'settings',
+            'playedSettingIds'
+        ));
+        // $settings = GameSetting::where('game_id', 1)->get(); // game_id は必要に応じて変更        
+
+        //     return view('game.kana_options', compact('settings'));
     }
 
     ///// ゲームスタートmodal /////
@@ -263,9 +280,11 @@ class KanaGameController extends Controller
         /**
          * ② ランキング（ユーザーごと最高値）
          */
+        $aggregate = ($orderDirection === 'asc') ? 'MIN' : 'MAX';
+
         $top3 = GameResult::select(
                 'user_id',
-                DB::raw("MIN($orderColumn) as best_value") // ASC なら MIN、DESC なら MAX
+                DB::raw("$aggregate($orderColumn) as best_value") // ASC なら MIN、DESC なら MAX
             )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
@@ -286,27 +305,37 @@ class KanaGameController extends Controller
         $myBest = GameResult::where('user_id', $user->id)
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
-            ->min($orderColumn);  // ASC＝min, DESC＝max と同じ動き
+            ->{$orderDirection === 'asc' ? 'min' : 'max'}($orderColumn);
 
         /**
          * ④ 自分の順位
          */
         $myRank = GameResult::select(
                 'user_id',
-                DB::raw("MIN($orderColumn) as best_value")
+                DB::raw("$aggregate($orderColumn) as best_value")
             )
             ->where('game_id', $game_id)
             ->where('setting_id', $setting_id)
             ->groupBy('user_id')
-            ->having('best_value', $orderDirection === 'asc' ? '<' : '>', $myBest)
+            ->having(
+                'best_value',
+                $orderDirection === 'asc' ? '<' : '>',
+                $myBest
+            )
             ->count() + 1;
 
-        return response()->json([
+            // バッジ付与処理の追加
+            $badgeService = new BadgeService();
+            $badge = $badgeService->giveNextBadge($user);
+
+            // モーダル表示用の情報を返す
+            return response()->json([
             'saved'       => true,
             'mode'        => $mode,
             'top3'        => $top3,
             'my_best'     => $myBest,
-            'my_rank'     => $myRank
+            'my_rank'     => $myRank,
+            'badge'       => $badge,
         ]);
     }
 }

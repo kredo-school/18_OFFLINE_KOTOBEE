@@ -190,3 +190,50 @@
     cursor: pointer;
     font-size: 1rem;
 }
+
+/* Kana-Optionブレード用のcss */
+/* Kana Game Options title */
+.kana-options-title {
+    color: #5a4a2f;   /* loginと同系の茶色 */
+    font-weight: 600;
+}
+
+/* ゲーム説明文 */
+.kana-options-description {
+    margin: 10px 0 20px 1rem; /* 左に1段落分下げる */
+    text-align: left;
+}
+
+.kana-options-description p {
+    margin: 4px 0;
+    font-style: italic;
+}
+
+.kana-options-description .desc-main {
+    font-size: 0.95rem;
+    color: #6b5a3a;  /* やさしい茶 */
+}
+
+.kana-options-description .desc-sub {
+    font-size: 0.85rem;
+    color: #8a7a5e;  /* 少し薄い茶 */
+}
+
+/* 未実施（デフォルト白） */
+.option-played td {
+    background-color: #FFB728 !important;
+}
+
+/* 実施済み */
+.option-not-played td {
+    background-color: #ffffff;
+}
+
+/* ヘッダー色変更 */
+.table thead th {
+    background-color: #E6A73C !important;   /* 濃いめの黄色 */
+    color: #3A2A1F;                         /* 既存UIと合わせた濃い茶 */
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid #C48A28;
+}

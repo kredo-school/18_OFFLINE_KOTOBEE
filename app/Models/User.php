@@ -50,24 +50,46 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    
     // Relations. ユーザのグループidからグループ名などを取得する
     public function group()
     {
         return $this->belongsTo(Group::class);
     }
 
+    // ユーザが管理者である場合、保持しているグループ一覧
+    public function my_groups()
+    {
+        return $this->hasMany(Group::class, 'owner_id');
+    }
+
+    // ユーザがプレイしたゲーム結果一覧
+    public function game_results()
+    {
+        return $this->hasMany(GameResult::class, 'user_id');
+    }
+
     // User.php
-public function gameResults()
-{
-    return $this->hasMany(GameResult::class, 'user_id');
-}
-//ユーザーがアカウント削除した場合
-protected static function booted()
-{
-    static::deleting(function ($user) {
-        $user->gameResults()->delete(); // 関連データも削除
-    });
-}
+    public function gameResults()
+    {
+        return $this->hasMany(GameResult::class, 'user_id');
+    }
+
+    //ユーザーがアカウント削除した場合
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            $user->gameResults()->delete(); // 関連データも削除
+        });
+    }
+
+    // グループに承認されているか
+    public function approved_group()
+    {
+        return $this->belongsToMany(Group::class, 'group_members')
+            ->wherePivot('status', 2)
+            ->withPivot('status')
+            ->first();
+    }
 
 }
