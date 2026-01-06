@@ -11,7 +11,7 @@ class GrammarQuestion extends Model
         'created_by_admin_in',
         'stage_id',
         'note',
-        'problem_image_url',
+        'image_url',
         'correct_sentence',
     ];
 

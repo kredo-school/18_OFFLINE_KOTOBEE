@@ -9,28 +9,28 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>{{ config('app.name') }} | @yield('title')</title>
+    <title>{{ config('app.name') }} | @yield('title')</title>
 
-<!-- Fonts -->
-<link rel="dns-prefetch" href="//fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-{{-- font-awesome --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {{-- font-awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- bootstrap cdn -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Styles -->
-@vite(['resources/css/common.css'])
+    <!-- Styles -->
+    @vite(['resources/css/common.css'])
 
     {{-- 各ページ固有のviteファイルを読み込む --}}
     @stack('styles')
 
     @stack('scripts')
 
-<!-- Scripts -->
-@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 
 
@@ -70,7 +70,7 @@
 
                     @auth
                         <!-- Avatar -->
-                        <a href="#" class="kb-avatar-link">
+                        <a href="{{ route('profile') }}" class="kb-avatar-link">
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
@@ -79,14 +79,15 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ route('profile') }}"
+                                    role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    v-pre>
                                     @if (Auth::check())
                                         {{ Auth::user()->name }}
                                         {{-- 変更 --}}
                                     @endif
 
-                         
+
                                     @if (Auth::check() && Auth::user()->avatar_url)
                                         {{-- 変更 --}}
                                         <!-- 画像の処理 -->
@@ -113,31 +114,30 @@
                                             @if (Auth::check() && !Auth::user()->group_id)
                                                 <a class="kb-menu-item" href="#">
                                                     Group Join
-                                           
+
                                                 </a>
                                             @endif
 
-                                    <div class="dropdown-menu dropdown-menu-end"
-                                                aria-labelledby="navbarDropdown">
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                                     onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                                     {{ __('Logout') }}
                                                 </a>
-                                           
+
                                                 {{-- Logout --}}
                                                 <a class="kb-menu-item" href="{{ route('login') }}"
                                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                     Logout
                                                 </a>
-                                                
+
 
                                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                                     class="d-none">
                                                     @csrf
                                                 </form>
 
-                                        </div>
+                                            </div>
                                     </details>
                                 </div>
                             @endauth
@@ -147,9 +147,9 @@
         <!-- ========================== -->
 
 
-        <!-- ========================== -->  
+        <!-- ========================== -->
         @include('layouts.nav')
-           
+
         <!-- Body Content -->
         <main class="kb-main">
             @yield('content')
@@ -157,4 +157,5 @@
         </main>
     </div>
 </body>
+
 </html>
