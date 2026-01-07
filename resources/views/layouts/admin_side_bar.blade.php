@@ -19,8 +19,11 @@
                class="{{ request()->routeIs('group.applicants') ? 'active' : '' }}">
                 <i class="fa-regular fa-user"></i>Members
             </a>
-        @endif
-        <a href="#"><i class="fa-solid fa-chart-column"></i>Performance</a>
+            <a href="{{ route('group.edit', ['id' => $group->id]) }}"
+               class="{{ request()->routeIs('group.edit') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-column"></i>Edit Group
+            </a>
+        @endif        
         <a href="#"><i class="fa-regular fa-comment-dots"></i>Awards</a>
         <a href="#"><i class="fa-regular fa-envelope"></i>Messages</a>
         <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>

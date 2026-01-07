@@ -105,7 +105,15 @@ Route::middleware(['auth'])->group(function () {
 
     /*** GroupAdmin 参加拒否の処理 ***/
     Route::post('/group/{group}/deny/{user}', [GroupController::class, 'applicant_deny'])
-        ->name('group.applicant.deny');    
+        ->name('group.applicant.deny');
+        
+    /*** GroupAdmin グループ編集 ***/
+    Route::get('/group/edit/{id}', [GroupController::class, 'edit_show'])
+        ->name('group.edit');
+
+    /*** GroupAdmin グループ編集の処理 ***/
+    Route::post('group/edit/process/{id}', [GroupController::class, 'edit_process'])
+        ->name('group.edit.process');
     
     
 

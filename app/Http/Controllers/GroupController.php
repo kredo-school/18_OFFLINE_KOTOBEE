@@ -201,4 +201,31 @@ class GroupController extends Controller
             
         return back()->with('success', 'Selected users denied.');
     }
+
+    /**
+     * グループ編集
+     */
+    public function edit_show($id) {
+        $group = Group::findOrFail($id);
+        return view('groups.edit', compact('group'));
+    }
+
+    /**
+     * グループ編集の処理
+     */
+    public function edit_process(Request $request, $id)
+    {
+        $group = Group::findOrFail($id);
+
+        $group->name = $request->input('name');
+        $group->secret = $request->input('secret');
+        $group->note = $request->input('note');
+
+        $group->save();
+
+        return redirect()
+            ->route('group.edit', ['id' => $group->id])
+            ->with('success', 'Group updated successfully');
+    }
+
 }
