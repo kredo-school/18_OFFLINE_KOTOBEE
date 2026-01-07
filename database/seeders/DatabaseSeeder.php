@@ -37,5 +37,10 @@ class DatabaseSeeder extends Seeder
         // Kana_questionsTable登録用シーダー呼び出し
         $this->call(Kana_questionsTableSeeder::class);
         $this->call(VocabQuestionSeeder::class);
+
+        //grammargame
+        $this->call(Grammar_QuestionsTableSeeder::class);
+        $this->call(Grammar_Question_BlocksTableSeeder::class);
+        $this->call(Grammar_Wrong_AnswersTableSeeder::class);
     }
 }

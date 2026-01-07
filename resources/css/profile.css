@@ -33,7 +33,7 @@
 .profile-container {
     background-color: #FFFFFF; /* カードの白だけ */
     border-radius: 25px;
-    padding: 60px 20px 380px;
+    padding: 60px 20px 50px;
     max-width: 380px;
     width: 100%;
     position: relative;
@@ -161,4 +161,42 @@
 .back-icon,
 .setting-icon {
     font-size: 24px; /* 好きなサイズに変更 */
+}
+
+
+/* バッジ処理追加　2026/1/1 (ただし) */
+.badge-map-wrapper{
+    width: 100%;
+    max-width: 650px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.badge-title{
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.japan-map-container{
+    position: relative;
+    width: 100%;
+    max-width: 428px;   /* ← viewBox に合わせるのが一番安全 */
+    margin: 0 auto;     /* 中央寄せ */
+}
+
+.japan-base-map{
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 県バッジ共通 */
+.badge-prefecture{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+    pointer-events: none; /* クリック邪魔しないように任意 */
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminGrammarController;
+use App\Http\Controllers\AdminVocabController;
 use App\Http\Controllers\GrammarController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
@@ -77,6 +79,13 @@ Route::middleware(['auth'])->group(function () {
     /*** ▼ kanaゲーム：結果データ保存 ▼ ***/
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
+
+    // Create Group 画面
+    Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
+    // 仮の GroupAdmin ダッシュボード画面
+    Route::get('/group/dashboard', function () {
+        return 'Dashboard (Coming Soon)';
+    })->name('group.dashboard');
         
     ///////// グループ管理 //////////
     /*** Create Group 画面 ***/
@@ -147,7 +156,7 @@ Route::middleware(['auth'])->group(function () {
 
     /*** grammarゲーム：ゲーム開始用API ***/
     Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
-        ->name('grammar.start');    
+        ->name('grammar.start');
 
     /*** grammarゲーム:結果データ保存***/
     Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
@@ -158,14 +167,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabulary.index');
     Route::get('/grammar', [GrammarController::class, 'index'])->name('grammar.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/edit', [ProfileController::class, 'update']) ->name('profile.update');
+    Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     ///////// 生徒のグループ機能 /////////    
     /*** グループ検索画面 ***/
     Route::get('/group/search', [StudentGroupController::class, 'search'])
         ->name('group.search');
-        
+
     /*** グループ申請画面 ***/
     Route::get('group/join/{group}', [StudentGroupController::class, 'join'])
         ->name('group.join');
@@ -173,5 +182,18 @@ Route::middleware(['auth'])->group(function () {
     /*** グループ申請処理 ***/
     Route::post('group/join/process/{group}', [StudentGroupController::class, 'join_submit'])
         ->name('group.join.submit');
+});
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/vocab/create', [AdminVocabController::class, 'create'])->name('admin.vocab.create');
+    Route::post('/admin/vocab/store', [AdminVocabController::class, 'store'])->name('admin.vocab.store');
+});
+
+
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    // Grammar 問題作成画面
+    Route::get('/grammar/create', [AdminGrammarController::class, 'create'])->name('admin.grammar.create');
+    // Grammar 問題保存
+    Route::post('/grammar/store', [AdminGrammarController::class, 'store'])->name('admin.grammar.store');
 });
