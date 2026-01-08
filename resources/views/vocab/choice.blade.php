@@ -12,14 +12,12 @@ console.log("POST answer:", "{{ old('answer') }}");
 
 <div class="game-wrapper">
 
-    <div class="header-bar">
-        <img src="/images/logo.png" class="logo">
-    </div>
+    
 
     <h2 class="title">こたえをえらんでね！</h2>
 
     <div class="image-box {{ session('correct') ? 'correct-border' : '' }}">
-         <img src="{{ asset('storage/images/' . basename($question->image_url)) }}" class="word-image">
+         <img src="{{ asset($question->image_url) }}" class="word-image">
     </div>
 
     <form id="choiceForm" method="POST" action="{{ route('vocab.checkChoice') }}">
