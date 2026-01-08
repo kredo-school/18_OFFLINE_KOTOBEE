@@ -1,0 +1,190 @@
+/* =========================
+   基本設定
+========================= */
+body {
+    background: #FFFFCE;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================
+   ゲーム全体
+========================= */
+.game-wrapper {
+    max-width: 420px;
+    margin: 30px auto;
+    padding: 0 20px 200px; /* 下に result-panel 分の余白 */
+    box-sizing: border-box;
+}
+
+/* =========================
+   タイトル
+========================= */
+.title {
+    margin-top: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* =========================
+   画像エリア
+========================= */
+.image-box {
+    width: 260px;
+    height: 260px;
+    margin: 20px auto;
+    background: #FFFFCE;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.correct-border {
+    border: 4px solid #3CA2FF;
+}
+
+.word-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+/* =========================
+   選択肢ボタン
+========================= */
+.choice-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 22px;
+    border-radius: 10px;
+    border: none;
+    background: #FFFDFD;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.15s;
+}
+
+.choice-btn:hover {
+    transform: translateY(-2px);
+}
+
+.choice-btn:active {
+    transform: scale(0.92);
+}
+
+.choice-btn.selected {
+    background: #FF8C42;
+    color: #FFFFFF;
+}
+
+/* =========================
+   画面下 結果パネル
+========================= */
+.result-panel {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 420px;
+    height: 140px;
+
+    background: #6F6F63;
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 99999;
+}
+
+/* =========================
+   結果テキスト
+========================= */
+.result-text {
+    color: #FFFFFF;
+    font-size: 28px;
+    font-weight: 900;          /* ← 超太字 */
+    letter-spacing: 0.5px;     /* ← 画像っぽさ */
+    margin-bottom: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.result-text .icon {
+    color: #FFB728;
+    margin-right: 6px;
+}
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+
+    border-radius: 50%;
+    background: #FFB728;       /* オレンジ丸 */
+    color: #6F6F63;            /* 中の✓色 */
+
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* =========================
+   check / continue ボタン
+========================= */
+.panel-btn {
+    background: #FF8D28;
+    color: #FFFFFF;
+
+    font-size: 22px;
+    font-weight: 900;          /* ← 太く */
+    letter-spacing: 0.8px;     /* ← 画像感 */
+
+    padding: 10px 80px;
+    border-radius: 14px;
+    border: none;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+    
+
+/* =========================
+   モーダル（既存用）
+========================= */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+}
+
+#result-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFB728;
+    padding: 30px;
+    border-radius: 12px;
+    border: 5px solid #B67A20;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    min-width: 380px;
+    max-width: 90%;
+    text-align: center;
+    z-index: 1001;
+}

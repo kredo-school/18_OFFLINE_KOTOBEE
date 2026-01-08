@@ -14,7 +14,7 @@ class VocabQuestionSeeder extends Seeder
             ['ともだち', 'storage/images/game_images/vocabulary/friends_man.png', 1],
             ['せいと', 'storage/images/game_images/vocabulary/kaigi_shinken_school_gakuran.png', 1],
             ['せんせい', 'storage/images/game_images/vocabulary/job_teacher_man.png', 1],
-            ['わたし', 'storage/images/game_images/vocabulary/スクリーンショット 2025-12-05 16.26.57', 1],
+            ['わたし', 'storage/images/game_images/vocabulary/スクリーンショット 2025-12-05 16.26.57.png', 1],
             ['にほん', 'storage/images/game_images/vocabulary/9f2c5901929736861250abf8b8dd9f6f.jpg', 1],
         ];
 

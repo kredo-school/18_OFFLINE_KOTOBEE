@@ -52,7 +52,7 @@ class VocabGameController extends Controller
         $index = session('vocab_index', 0);
 
         if ($index >= count($questions)) {
-            return view('vocab.kana', [
+            return view('game.vocabulary.kana', [
                 'question' => null,
                 'chars' => [],
                 'shuffled' => [],
@@ -71,7 +71,7 @@ class VocabGameController extends Controller
         if ($current['type'] === 'choice') {
             $choices = $this->makeChoices($word);
 
-            return view('vocab.choice', [
+            return view('game.vocabulary.choice', [
                 'question' => $word,
                 'choices' => $choices,
                 'isLast' => $isLast, // ★ 追加
@@ -108,7 +108,7 @@ class VocabGameController extends Controller
 
             shuffle($choices);
 
-            return view('vocab.kana', [
+            return view('game.vocabulary.kana', [
                 'question' => $word,
                 'chars' => $chars,
                 'shuffled' => $choices,

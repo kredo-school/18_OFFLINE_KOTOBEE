@@ -31,15 +31,6 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-    <!-- bootstrap cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Styles -->
-    @vite(['resources/css/common.css'])      
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -79,11 +70,6 @@
                         <!-- Avatar -->
                         <a href="{{ route('profile') }}" class="kb-avatar-link">
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ route('profile') }}"
@@ -162,7 +148,7 @@
             @yield('content')
         </main>
 
-    </div>   
+    </div>
 
 </body>
 
