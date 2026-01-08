@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GameResult;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\User;
@@ -114,7 +115,85 @@ class GroupController extends Controller
                 $avg_time_attacks[$script][$subtype] = $user_max_scores->isEmpty() ? 0 : round($user_max_scores->avg(), 2);
             }
         }
-        return view('groups.dashboard', compact('group', 'avg_scores_60s', 'avg_time_attacks'));
+
+        // グループのユーザ
+        $group_user_ids = $group->users->pluck('id');
+
+        $game_maps = [
+            1 => 'kana',     // Kana play count
+            2 => 'word',     // Word play count
+            3 => 'grammar',  // Grammar play count            
+        ];
+
+        $cards = [];
+
+        foreach ($game_maps as $game_id => $key) {
+
+            // ユーザーのプレイした人のプレイ回数を集計
+            $counts = GameResult::query()
+                ->whereIn('user_id', $group_user_ids)
+                ->where('game_id', $game_id)
+                ->select('user_id', DB::raw('COUNT(*) as play_count'))
+                ->groupBy('user_id')
+                ->pluck('play_count', 'user_id');
+            
+            //　グループ全体に対してプレイ回数を集計(0回を含めるため)
+            $all_play_counts = $group->users->map(function ($u) use ($counts){
+                return [
+                    'user_id' => $u->id,
+                    'name' => $u->name,
+                    'play_count' => (int) ($counts[$u->id] ?? 0),
+                ];
+            });
+                
+            // dd($counts);
+
+            // top5を取得
+            $top5 = $all_play_counts
+                ->sortByDesc('play_count')
+                ->values()
+                ->take(5)
+                ->map(function ($row, $index) {
+                    $row['rank'] = $index + 1;
+                    return $row;
+                });
+            
+            // dd($top5);
+
+            // 全生徒の総プレイ数
+            $total_plays = GameResult::query()
+                ->whereIn('user_id', $group_user_ids)
+                ->where('game_id', $game_id)
+                ->count();
+                
+            $user_count = max(1, $group_user_ids->count());
+
+            // dd($user_count);
+
+            $avg_plays = round($total_plays / $user_count, 2);
+
+            $cards[$key] = [
+                'avg' => $avg_plays,
+                'top5' => $top5,                
+            ];
+            
+            // $cards[$key] = [
+            //     'avg' => $avg_plays,
+            //     'top5' => $top5,
+            //     'view_all_url' => route('groups.playcounts.index', [
+            //         'group' => $group->id,
+            //         'game_id' => $game_id,
+            //     ]),
+            // ]; 
+        }
+
+        return view('groups.dashboard', compact(
+            'group',
+            'avg_scores_60s',
+            'avg_time_attacks',
+            'cards'
+        ));
+
     }
 
     /**

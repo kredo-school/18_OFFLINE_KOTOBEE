@@ -5,6 +5,14 @@
     @include('layouts.admin_side_bar')
 @endsection
 
+@once
+    @push('styles')
+        @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
+        @vite(['resources/js/dashboard_graph/kana_game_time_attacks_avg_chart.js'])
+        @vite(['resources/css/dashboard/playcount-cards.css'])
+    @endpush
+@endonce
+
 
 @section('content')
     {{-- <h1>Group Dashboard</h1> --}}
@@ -47,6 +55,8 @@
         ];
         
     @endphp
+    
+    <x-dashboard.playcount-cards :cards="$cards" />
 
     {{-- 60s-count 平均 --}}
     <div style="max-width: 900px; margin: 12px auto;">
@@ -77,7 +87,8 @@
     </script>
 
     {{-- 各グラフ描写のjs読み込み --}}
-    @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
+    {{-- @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
     @vite(['resources/js/dashboard_graph/kana_game_time_attacks_avg_chart.js'])
+    @vite(['resources/css/dashboard/playcount-cards.css']) --}}
 
 @endsection
