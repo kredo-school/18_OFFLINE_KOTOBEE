@@ -326,6 +326,10 @@ class VocabGameController extends Controller
             ->havingRaw("MIN($orderColumn) < ?", [$myBest])
             ->count() + 1;
 
+        // バッジ付与処理の追加
+        $badgeService = new BadgeService();
+        $badge = $badgeService->giveNextBadge($user);
+
         // JSONで返す
         return response()->json([
             'saved' => true,
@@ -333,6 +337,7 @@ class VocabGameController extends Controller
             'my_best' => $myBest,
             'my_rank' => $myRank,
             'top3' => $top3,
+            'badge' => $badge,
             'streak' => $user->streak,
         ]);
     }
