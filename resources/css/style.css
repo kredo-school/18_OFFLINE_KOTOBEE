@@ -101,7 +101,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    z-index: 99999;
+    z-index: 9999;
 }
 
 /* =========================
@@ -109,58 +109,48 @@ body {
 ========================= */
 .result-text {
     color: #FFFFFF;
-    font-size: 28px;
-    font-weight: 900;          /* ← 超太字 */
-    letter-spacing: 0.5px;     /* ← 画像っぽさ */
+    font-size: 32px;
+    font-weight: 900;
     margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 丸付きチェック */
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #FFB728;
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 900;
 
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-
-.result-text .icon {
+.icon {
     color: #FFB728;
-    margin-right: 6px;
 }
-.icon-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 36px;
-    height: 36px;
-    margin-right: 10px;
-
-    border-radius: 50%;
-    background: #FFB728;       /* オレンジ丸 */
-    color: #6F6F63;            /* 中の✓色 */
-
-    font-size: 22px;
-    font-weight: 900;
-    line-height: 1;
-}
-
 /* =========================
-   check / continue ボタン
+   continue / check ボタン
 ========================= */
 .panel-btn {
     background: #FF8D28;
     color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 900;
 
-    font-size: 22px;
-    font-weight: 900;          /* ← 太く */
-    letter-spacing: 0.8px;     /* ← 画像感 */
-
-    padding: 10px 80px;
-    border-radius: 14px;
+    padding: 12px 80px;
+    border-radius: 16px;
     border: none;
 
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    text-transform: lowercase;
 }
-    
-
 /* =========================
    モーダル（既存用）
 ========================= */

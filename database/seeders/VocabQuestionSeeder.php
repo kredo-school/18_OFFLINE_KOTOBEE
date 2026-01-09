@@ -23,8 +23,8 @@ class VocabQuestionSeeder extends Seeder
             ['かぞく', 'storage/images/game_images/vocabulary/名称未設定のデザイン.png', 1],
             ['ちち', 'storage/images/game_images/vocabulary/baby_dakkohimo_man.png', 1],
             ['はは', 'storage/images/game_images/vocabulary/39bf056a1a3f58b199426a90d3cb04ca.jpg', 1],
-            ['おねえさん', 'storage/images/game_images/vocabulary/family_ane_otouto.png', 1],
-            ['おとうと', 'storage/images/game_images/vocabulary/family_3_kyoudai.png', 1],
+            ['おねえさん', 'storage/images/game_images/vocabulary/スクリーンショット 2026-01-09 15.43.46.png', 1],
+            ['おとうと', 'storage/images/game_images/vocabulary/スクリーンショット 2026-01-09 15.43.25.png', 1],
         ];
 
         // Stage3（名詞）

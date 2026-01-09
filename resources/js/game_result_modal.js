@@ -22,6 +22,8 @@ export function showResultModal(data) {
         `;
     });
 
+    
+
     content.innerHTML = html;
     modal.style.display = "block";
 }
