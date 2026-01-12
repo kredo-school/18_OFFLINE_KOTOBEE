@@ -1,0 +1,86 @@
+.page-wrapper {
+    background: #FFFFCE;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+.group-header {
+    background: #7B7B6A;
+    color: #000;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.card-box {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+
+.sort-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.btn-delete-selected {
+    margin-left: auto;
+    background: #E53935;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.member-table thead {
+    background: #E0E0E0;
+}
+
+.member-table th,
+.member-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.btn-delete {
+    background: #E53935;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}

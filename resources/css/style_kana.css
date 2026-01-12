@@ -1,0 +1,207 @@
+/* =========================
+   基本設定
+========================= */
+body {
+    background: #FFFFCE;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================
+   ゲーム全体（1画面固定）
+========================= */
+.game-wrapper {
+    max-width: 420px;
+    margin: 30px auto;
+    padding: 0 20px 160px; /* result-panel 分 */
+    height: calc(100vh - 30px);
+    box-sizing: border-box;
+}
+
+/* =========================
+   タイトル（変更なし）
+========================= */
+.title {
+    margin-top: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* =========================
+   画像エリア（変更なし）
+========================= */
+.image-box {
+    width: 260px;
+    height: 260px;
+    margin: 20px auto;
+    background: #FFFFCE;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.correct-border {
+    border: 4px solid #3CA2FF;
+}
+
+.word-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+/* =========================
+   回答エリア
+========================= */
+.answer-area {
+    min-height: 50px;
+    padding: 10px;
+    margin-bottom: 12px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.08);
+    font-size: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* =========================
+   かな選択肢（スクロールなし）
+========================= */
+#choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 10px;
+
+    max-height: calc(100vh - 520px);
+    overflow: hidden; /* ★ スクロールさせない */
+}
+
+/* =========================
+   かな・選択ボタン
+========================= */
+.kana-box,
+.choice-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 18px;
+    font-size: 22px;
+    border-radius: 12px;
+    background: #FFFDFD;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform .1s;
+}
+
+.kana-box:active,
+.choice-btn:active {
+    transform: scale(0.9);
+}
+
+/* =========================
+   画面下 結果パネル
+========================= */
+.result-panel {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 420px;
+    height: 140px;
+
+    background: #6F6F63;
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+}
+
+/* =========================
+   結果テキスト
+========================= */
+.result-text {
+    color: #FFFFFF;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 丸付きチェック */
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #FFB728;
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 900;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    color: #FFB728;
+}
+/* =========================
+   continue / check ボタン
+========================= */
+.panel-btn {
+    background: #FF8D28;
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 900;
+
+    padding: 12px 80px;
+    border-radius: 16px;
+    border: none;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    text-transform: lowercase;
+}
+
+/* =========================
+   モーダル（既存）
+========================= */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+}
+
+#result-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFB728;
+    padding: 30px;
+    border-radius: 12px;
+    border: 5px solid #B67A20;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    min-width: 380px;
+    max-width: 90%;
+    text-align: center;
+    z-index: 1001;
+}

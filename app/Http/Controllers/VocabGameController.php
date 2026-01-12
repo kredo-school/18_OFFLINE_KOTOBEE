@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VocabQuestion;
 use App\Models\GameResult;
+use App\Services\BadgeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,7 @@ class VocabGameController extends Controller
         $index = session('vocab_index', 0);
 
         if ($index >= count($questions)) {
-            return view('vocab.kana', [
+            return view('game.vocabulary.kana', [
                 'question' => null,
                 'chars' => [],
                 'shuffled' => [],
@@ -72,7 +73,7 @@ class VocabGameController extends Controller
         if ($current['type'] === 'choice') {
             $choices = $this->makeChoices($word);
 
-            return view('vocab.choice', [
+            return view('game.vocabulary.choice', [
                 'question' => $word,
                 'choices' => $choices,
                 'isLast' => $isLast, // ★ 追加
@@ -109,7 +110,7 @@ class VocabGameController extends Controller
 
             shuffle($choices);
 
-            return view('vocab.kana', [
+            return view('game.vocabulary.kana', [
                 'question' => $word,
                 'chars' => $chars,
                 'shuffled' => $choices,
@@ -330,6 +331,10 @@ class VocabGameController extends Controller
             ->havingRaw("MIN($orderColumn) < ?", [$myBest])
             ->count() + 1;
 
+        // バッジ付与処理の追加
+        $badgeService = new BadgeService();
+        $badge = $badgeService->giveNextBadge($user);
+
         // JSONで返す
         return response()->json([
             'saved' => true,
@@ -337,6 +342,7 @@ class VocabGameController extends Controller
             'my_best' => $myBest,
             'my_rank' => $myRank,
             'top3' => $top3,
+            'badge' => $badge,
             'streak' => $user->streak,
         ]);
     }
