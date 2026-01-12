@@ -59,4 +59,5 @@ export function closeResultModal() {
     if (overlay) overlay.style.display = "none";
 }
 
+
 window.showVocabResult = showVocabResult;
