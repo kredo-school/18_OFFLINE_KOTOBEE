@@ -84,7 +84,8 @@
                     Proceed to Payment
                 </button>
             @else
-                <a href="{{ route('group.dashboard') ?? '#' }}" class="btn btn-primary w-100 mb-3">
+                <a href="{{ route('group.dashboard', session('created_group_id')) }}"
+                class="btn btn-primary w-100 mb-3">
                     Go to Group Dashboard
                 </a>
             @endif

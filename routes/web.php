@@ -82,6 +82,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Create Group 画面
     Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
+    
     // 仮の GroupAdmin ダッシュボード画面
     // Route::get('/group/dashboard', function () {
     //     return 'Dashboard (Coming Soon)';
