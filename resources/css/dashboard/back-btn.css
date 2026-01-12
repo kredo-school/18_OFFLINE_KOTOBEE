@@ -1,0 +1,16 @@
+/* 戻るボタン:左上 */
+.back-btn {
+    position: fixed;
+    top: 90px;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+
+    text-decoration: none;
+    cursor: pointer;
+}            
+
+.back-btn i {
+    font-size: 20px;
+    color: #111827;
+}

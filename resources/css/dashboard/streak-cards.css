@@ -1,0 +1,89 @@
+.streak-card{
+    width: 420px;
+    max-width: 100%;
+    margin: 18px auto;
+    padding: 18px 16px 10px;
+}
+
+
+.streak-title{
+    text-align:center;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.streak-topbox{
+    border: 5px solid #e5e7eb;
+    border-radius: 28px;
+    padding: 18px 18px;
+    background: #fff;
+}
+
+.streak-toprow{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 10px 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.streak-ord{ width: 70px; text-align:left; }
+
+.streak-name{ flex: 1; text-align:center; font-weight: 700; }
+
+.streak-days{ width: 110px; text-align:right; font-weight: 800; }
+
+.streak-table{
+    width:100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: 14px;
+}
+
+.streak-table thead th{
+    font-size: 14px;
+    color:#6b7280;
+    font-weight: 700;
+    text-align:center;
+    padding: 0 6px 4px;
+}
+
+.streak-table tbody tr{
+    background:#fff;
+}
+
+.streak-table tbody td{
+    padding: 10px 12px;
+    font-size: 16px;
+    text-align:center;
+}
+
+.streak-td-name{ font-weight: 700; }
+
+.streak-td-streak{ font-weight: 800; }
+
+.streak-empty{
+    padding: 14px;
+    color:#6b7280;
+    text-align:center;
+    background:#f3f4f6;
+}
+
+.streak-viewall{
+    text-align:right;
+    margin-top: 6px;
+    padding-right: 4px;
+}
+
+.streak-viewall a{
+    color:#2563eb;
+    font-weight: 800;
+    text-decoration:none;
+}
+
+.streak-viewall a:hover{
+    text-decoration: underline;
+}
+

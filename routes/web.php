@@ -96,6 +96,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/group/dashboard/{id}', [GroupController::class, 'show'])
         ->name('group.dashboard');
     
+    /*** GroupAdmin 全生徒のプレイカウント画面 ***/
+    Route::get('/group/{group_id}/playcount', [GroupController::class, 'playcount'])
+        ->name('group.playcount');
+
+    /*** GroupAdmin 全生徒の進捗度画面 ***/
+    Route::get('/group/{group_id}/progress', [GroupController::class, 'game_progress'])
+        ->name('group.progress');
+        
+    /*** GroupAdmin 全生徒の連続プレイ日数画面 ***/
+    Route::get('/group/{group_id}/streak', [GroupController::class, 'all_streak'])
+        ->name('group.streak');
+
     /*** GroupAdmin 参加承認or拒否画面***/
     Route::get('/group/approval/{id}', [GroupController::class, 'applicants_show'])
         ->name('group.applicants');

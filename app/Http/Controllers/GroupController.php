@@ -58,7 +58,7 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        /*** カナゲーム用のグラフ作成 ***/        
+        /***** カナゲーム用のグラフ作成 *****/        
         $group = Group::with([
             'users' => function ($q) {
                 $q->wherePivot('status', 2);
@@ -116,14 +116,20 @@ class GroupController extends Controller
             }
         }
 
-        // グループのユーザ
+        /***** ゲームプレイ回数のデータを作成 *****/
         $group_user_ids = $group->users->pluck('id');
 
         $game_maps = [
-            1 => 'kana',     // Kana play count
-            2 => 'word',     // Word play count
-            3 => 'grammar',  // Grammar play count            
+            1 => 'kana',
+            2 => 'vocabulary',
+            3 => 'grammar',
         ];
+
+        $route_maps = [
+            'kana'       => 'group.kana.playcount',
+            'vocabulary' => 'group.vocabulary.playcount',
+            'grammar'    => 'group.grammar.playcount',
+        ];     
 
         $cards = [];
 
@@ -172,29 +178,364 @@ class GroupController extends Controller
 
             $avg_plays = round($total_plays / $user_count, 2);
 
-            $cards[$key] = [
-                'avg' => $avg_plays,
-                'top5' => $top5,                
-            ];
-            
             // $cards[$key] = [
             //     'avg' => $avg_plays,
-            //     'top5' => $top5,
-            //     'view_all_url' => route('groups.playcounts.index', [
-            //         'group' => $group->id,
-            //         'game_id' => $game_id,
-            //     ]),
-            // ]; 
+            //     'top5' => $top5,                
+            // ];
+            
+            $cards[$key] = [
+                'avg' => $avg_plays,
+                'top5' => $top5,
+                'view_all_url' => route('group.playcount', [
+                    'group_id' => $group->id,
+                    'game' => $key,
+                ]),
+            ]; 
         }
 
+        /***** 各生徒のゲームの進捗度のデータを作成 *****/
+
+        $stage_label = function (?int $stage_id) {
+            $stage_id = (int) $stage_id;
+            if ($stage_id <= 0) $stage_id = 1;
+            $major = intdiv($stage_id - 1, 7) + 1;
+            $minor = (($stage_id - 1) % 7) + 1;
+            return "{$major}-{$minor}";
+        };
+
+        $progress_maps = [
+            'vocabulary' => [2, 'vcab_stage_id'],
+            'grammar'    => [3, 'gram_stage_id'],
+        ];
+
+        $progress_cards = [];
+
+        foreach ($progress_maps as $key => [$game_id, $col]) {
+
+            // 各ユーザの最大stage_idを取得する
+            $max_stages = GameResult::query()
+                ->whereIn('user_id', $group_user_ids)
+                ->where('game_id', $game_id)
+                ->whereNotNull($col)
+                ->select('user_id', DB::raw("MAX($col) as max_stage"))
+                ->groupBy('user_id')
+                ->pluck('max_stage', 'user_id');
+                
+            $all_progress = $group->users->map(function ($u) use ($max_stages, $stage_label) {
+
+                $max = $max_stages[$u->id] ?? null;
+
+                $next_stage_id = is_null($max) ? 1 : ((int)$max + 1);
+
+                return [
+                    'user_id'  => $u->id,
+                    'name'     => $u->name,
+                    'stage_id' => $next_stage_id,
+                    'progress_label' => $stage_label($next_stage_id),
+                ];
+
+            });
+
+            // 進捗度top5
+            $top5 = $all_progress
+                ->sortByDesc('stage_id')
+                ->values()
+                ->take(5)
+                ->map(function ($row, $index) {
+                    $row['rank'] = $index + 1;
+                    return $row;
+                });          
+                
+            $progress_cards[$key] = [
+                'top5' => $top5,
+                'view_all_url' => route('group.progress', [ // route
+                    'group_id' => $group->id,
+                    'game' => $key,
+                ]),
+            ];
+
+        }
+
+        /***** streakランキング用データを作成 *****/
+        $streak_sorted = $group->users
+            ->map(function ($u) {
+                return [
+                    'user_id' => $u->id,
+                    'name'    => $u->name,
+                    'streak'  => (int) ($u->streak ?? 0),
+                ];
+            })
+            ->sortByDesc('streak')
+            ->values();
+
+        // rank付与
+        $streak_ranking = $streak_sorted->map(function ($row, $index) {
+            $row['rank'] = $index + 1;
+            return $row;
+        });
+
+        // $streak_ranking を使う
+        $streak_card = [
+            'top3' => $streak_ranking->take(3), // top3
+            'rest' => $streak_ranking->slice(3, 7), // top4~7
+            'view_all_url' => route('group.streak', ['group_id' => $group->id]),
+        ];
+        
         return view('groups.dashboard', compact(
             'group',
             'avg_scores_60s',
             'avg_time_attacks',
-            'cards'
+            'cards',
+            'progress_cards',
+            'streak_card',
         ));
 
     }
+
+    /** 
+     * 全生徒のゲームプレイ回数を表示
+     */
+    public function playcount(Request $request, $id) {
+
+        $group = Group::with([
+            'users' => function ($q) {
+                $q->wherePivot('status', 2); // グループ参加済みのみ
+            }        
+        ])->findOrFail($id);
+
+        // 全グループのユーザid
+        $group_user_ids = $group->users->pluck('id');
+
+        $game_key_to_id = [
+            'kana'       => 1,
+            'vocabulary' => 2,
+            'grammar'    => 3,
+        ];
+
+        // View用：プルダウン表示名
+        $game_titles = [
+            'kana' => 'Kana',
+            'vocabulary' => 'Vocabulary',
+            'grammar' => 'Grammar',
+        ];
+
+        // プルダウン選択値(default: kana)
+        $selected_key = $request->query('game', 'kana');
+        if (!isset($game_key_to_id[$selected_key])) {
+            $selected_key = 'kana';
+        }
+
+        $game_id = $game_key_to_id[$selected_key];
+
+        // rank 並び順(default: desc)
+        $order = $request->query('order', 'desc');
+        $order = in_array($order, ['asc', 'desc'], true) ? $order : 'desc';
+
+        // ユーザーのプレイした人のプレイ回数を集計
+        $counts = GameResult::query()
+            ->whereIn('user_id', $group_user_ids)
+            ->where('game_id', $game_id)
+            ->select('user_id', DB::raw('COUNT(*) as play_count'))
+            ->groupBy('user_id')
+            ->pluck('play_count', 'user_id');
+            
+        //　グループ全体に対してプレイ回数を集計(0回を含めるため)
+        $all_play_counts = $group->users->map(function ($u) use ($counts) {
+            return [
+                'user_id' => $u->id,
+                'name' => $u->name,
+                'play_count' => (int) ($counts[$u->id] ?? 0),
+            ];
+        });
+
+         // rankクリックでascとdescを切り替え
+        $sorted = ($order === 'asc')
+            ? $all_play_counts->sortBy('play_count')
+            : $all_play_counts->sortByDesc('play_count');
+
+        // 同点時の見た目を安定させたいなら名前で二次ソート（任意）
+        // $sorted = $sorted->values()->sort(function ($a, $b) use ($order) {
+        //     if ($a['play_count'] === $b['play_count']) {
+        //         return strcmp($a['name'], $b['name']);
+        //     }
+        //     return $order === 'asc'
+        //         ? ($a['play_count'] <=> $b['play_count'])
+        //         : ($b['play_count'] <=> $a['play_count']);
+        // })->values();
+
+        // ランキング用にソートしてrankを付与
+        $ranking = $sorted->values()->map(function ($row, $index) {
+            $row['rank'] = $index + 1;
+            return $row;
+        });
+
+        $total_plays = GameResult::query()        
+            ->whereIn('user_id', $group_user_ids)
+            ->where('game_id', $game_id)
+            ->count();
+    
+        $user_count = max(1, $group_user_ids->count());
+
+        $avg_plays = round($total_plays / $user_count, 2);        
+    
+        return view('groups.playcount_view_all', [
+            'group' => $group, 
+            'selected_key' => $selected_key, // プルダウンで選ばれたキー
+            'game_titles' => $game_titles, // プルダウン用
+            'avg_plays' => $avg_plays, // 平均
+            'ranking' => $ranking, // ランキング
+            'order' => $order, // asc or desc
+        ]);       
+
+    }
+
+    /**
+     * 全生徒のゲーム進捗度を表示
+     */
+    public function game_progress(Request $request, $id) {
+
+        $group = Group::with([
+            'users' => function ($q) {
+                $q->wherePivot('status', 2);
+            }
+        ])->findOrFail($id);
+
+        $group_user_ids = $group->users->pluck('id');
+
+        // progrress対象ゲーム(kanaなし)
+        $game_key_to_meta = [
+            'vocabulary' => [
+                'game_id' => 2,
+                'col'     => 'vcab_stage_id',
+                'title'   => 'Vocabulary',
+            ],
+            'grammar' => [
+                'game_id' => 3,
+                'col'     => 'gram_stage_id',
+                'title'   => 'Grammar',
+            ],
+        ];
+
+        // プルダウン選択(default: vocabulary)
+        $selected_key = $request->query('game', 'vocabulary');
+        
+        if (!isset($game_key_to_meta[$selected_key])) {
+            $selected_key = 'vocabulary';
+        }
+
+        $game_id = $game_key_to_meta[$selected_key]['game_id'];
+        $col     = $game_key_to_meta[$selected_key]['col'];
+
+        // rank並び順(default: desc)
+        $order = $request->query('order', 'desc');
+        $order = in_array($order, ['asc', 'desc'], true) ? $order : 'desc';
+
+        // ステージラベル生成
+        $stage_label = function (?int $stage_id) {
+            $stage_id = (int) $stage_id;
+            if ($stage_id <= 0) $stage_id = 1;
+            $major = intdiv($stage_id - 1, 7) + 1;
+            $minor = (($stage_id - 1) % 7) + 1;
+            return "{$major}-{$minor}";
+        };
+
+        // 各ユーザの最大stage_idを取得
+        $max_stages = GameResult::query()
+            ->whereIn('user_id', $group_user_ids)
+            ->where('game_id', $game_id)
+            ->whereNotNull($col)
+            ->select('user_id', DB::raw("MAX($col) as max_stage"))
+            ->groupBy('user_id')
+            ->pluck('max_stage', 'user_id');
+
+        // 未プレイのユーザも含める
+        $all_progress = $group->users->map(function ($u) use ($max_stages, $stage_label) {
+            $max = $max_stages[$u->id] ?? null;
+            $next_stage_id = is_null($max) ? 1 : ((int)$max + 1);
+    
+            return [
+                'user_id'  => $u->id,
+                'name'     => $u->name,
+                'stage_id' => $next_stage_id,
+                'progress_label' => $stage_label($next_stage_id),
+            ];
+        });
+
+        // ソート
+        $sorted = ($order === 'asc')
+            ? $all_progress->sortBy('stage_id')
+            : $all_progress->sortByDesc('stage_id');
+
+        // rank付与
+        $ranking = $sorted->values()->map(function ($row, $index) {
+            $row['rank'] = $index + 1;
+            return $row;
+        });
+
+        // View用：プルダウン表示名
+        $game_titles = [
+            'vocabulary' => 'Vocabulary',
+            'grammar' => 'Grammar',
+        ];
+
+        return view('groups.progress_view_all', [
+            'group' => $group,
+            'selected_key' => $selected_key,
+            'game_titles' => $game_titles,
+            'ranking' => $ranking,
+            'order' => $order,
+        ]);
+    }
+
+    /**
+     * 全生徒の連続プレイ日数を表示
+     */
+    public function all_streak(Request $request, $id) {
+
+        $group = Group::with([
+            'users' => function ($q) {
+                $q->wherePivot('status', 2);
+            }
+        ])->findOrFail($id);
+
+        // rank 並び順(default: desc)
+        $order = $request->query('order', 'desc');
+        $order = in_array($order, ['asc', 'desc'], true) ? $order : 'desc';
+
+        // streak
+        $all = $group->users->map(function ($u) {
+            return [
+                'user_id' => $u->id,
+                'name'    => $u->name,
+                'streak'  => (int) ($u->streak ?? 0),
+            ];
+        });
+
+        // 平均 streak（0含む）
+        $user_count = max(1, $all->count());
+        $avg_streak = round($all->sum('streak') / $user_count, 2);
+
+        // ソート
+        $sorted = ($order === 'asc')
+            ? $all->sortBy('streak')
+            : $all->sortByDesc('streak');
+
+        // rank付与
+        $ranking = $sorted->values()->map(function ($row, $index) {
+            $row['rank'] = $index + 1;
+            return $row;
+        });
+
+        return view('groups.streak_view_all', [
+            'group'      => $group,
+            'avg_streak' => $avg_streak,
+            'ranking'    => $ranking,
+            'order'      => $order,
+        ]);
+
+
+    }
+
 
     /**
      * 参加申請者表示画面
