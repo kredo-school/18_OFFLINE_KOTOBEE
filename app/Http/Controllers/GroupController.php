@@ -644,7 +644,7 @@ class GroupController extends Controller
         $group->save();
 
         return redirect()
-            ->route('group.edit', ['id' => $group->id])
+            ->route('group.edit', ['group_id' => $group->id])
             ->with('success', 'Group updated successfully');
     }
 

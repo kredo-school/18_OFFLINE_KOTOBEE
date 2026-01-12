@@ -11,15 +11,15 @@
 
     <nav class="menu">
         @if(isset($group))
-            <a href="{{ route('group.dashboard', ['id' => $group->id]) }}" 
+            <a href="{{ route('group.dashboard', ['group_id' => $group->id]) }}" 
                class="{{ request()->routeIs('group.dashboard') ? 'active' : '' }}">
                 <i class="fa-regular fa-window-maximize"></i>Dashboard
             </a>
-            <a href="{{ route('group.applicants', ['id' => $group->id]) }}"
+            <a href="{{ route('group.applicants', ['group_id' => $group->id]) }}"
                class="{{ request()->routeIs('group.applicants') ? 'active' : '' }}">
                 <i class="fa-regular fa-user"></i>Members
             </a>
-            <a href="{{ route('group.edit', ['id' => $group->id]) }}"
+            <a href="{{ route('group.edit', ['group_id' => $group->id]) }}"
                class="{{ request()->routeIs('group.edit') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-column"></i>Edit Group
             </a>

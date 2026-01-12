@@ -42,6 +42,32 @@ export function bindAgainButton(startCallback) {
 }
 
 //// grammarゲーム用開始ボタン /////
+
+// function disable_view_port() {
+//     const meta = document.querySelector('meta[name="viewport"]');
+//     if (meta) {
+//         meta.remove();
+//     }
+// }
+
+function disable_view_port() {
+    let meta = document.querySelector('meta[name="viewport"]');
+
+    // meta が無ければ作る（remove だと挙動が不安定な端末がある）
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'viewport';
+        document.head.appendChild(meta);
+    }
+
+    // ★ PC寄りに戻す（ここが効く）
+    meta.setAttribute('content', 'width=1200');
+
+    // 念のためリサイズイベント
+    window.dispatchEvent(new Event("resize"));
+}
+
+
 export function bindAgainButtonGrammer() {
 
     
@@ -50,6 +76,10 @@ export function bindAgainButtonGrammer() {
 
     btn.addEventListener("click", () => {
         
+        disable_view_port();
+
+        console.log("[bindAgain] btn =", btn);
+
         // modalを非表示
         const modal = document.getElementById('result-modal');
         if (modal) {
@@ -57,9 +87,18 @@ export function bindAgainButtonGrammer() {
         }
 
         // すでに取得済みの問題データでゲームを再スタート
-        if (window.questions) {
-            window.startGrammarGame(window.questions, window.grammar_stage_id);
-        }
+        // if (window.questions) {
+        //     window.startGrammarGame(window.questions, window.grammar_stage_id);
+        // }
+
+        // ★ 反映待ちしてから再スタート
+        setTimeout(() => {
+            console.log("[bindAgain] restart size:", window.innerWidth, window.innerHeight);
+
+            if (window.questions) {
+                window.startGrammarGame(window.questions, window.grammar_stage_id);
+            }
+        }, 80);
 
     });
 }

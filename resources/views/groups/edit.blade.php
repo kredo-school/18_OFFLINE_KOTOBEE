@@ -20,7 +20,7 @@
 
         <p class="subtitle">Modify your group settings</p>
 
-        <form class="card" aria-label="Edit Group Form" method="post" action="{{ route('group.edit.process', ['id' => $group->id]) }}">
+        <form class="card" aria-label="Edit Group Form" method="post" action="{{ route('group.edit.process', ['group_id' => $group->id]) }}">
             @csrf
 
             <div class="field">
@@ -40,7 +40,7 @@
             </div>
         
             <div class="actions">
-                <button class="btn btn-primary" type="button">Save</button>
+                <button class="btn btn-primary" type="submit">Save</button>
                 <button class="btn btn-ghost" type="button" disabled>Cancel</button>
             </div>
 
