@@ -14,21 +14,23 @@ console.log("POST answer:", "{{ old('answer') }}");
 
     
 
-    <h2 class="title">こたえをえらんでね！</h2>
+    <h2 class="title">こたえをえらんでね！</h2>  
 
     <div class="image-box {{ session('correct') ? 'correct-border' : '' }}">
-         <img src="{{ asset($question->image_url) }}" class="word-image">
+        <img src="{{ asset($question->image_url) }}" class="word-image">
     </div>
 
     <form id="choiceForm" method="POST" action="{{ route('vocab.checkChoice') }}">
         @csrf
+
         <input type="hidden" name="answer" id="answerInput">
 
         @foreach ($choices as $c)
             <button type="button" class="choice-btn" onclick="choose('{{ $c }}', this)">
                 {{ $c }}
-            </button>
+            </button>            
         @endforeach
+
     </form>
 
     {{-- × 不正解 --}}

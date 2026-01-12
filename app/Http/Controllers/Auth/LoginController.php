@@ -36,11 +36,11 @@ class LoginController extends Controller
         /** @var User $user */        
         $user = Auth::user();
 
-        // もしグループ管理者だった場合、複数あるグループのうちの最新のグループに移動する
-        $group = $user->my_groups()->latest('created_at')->first();
+        // もしグループ管理者だった場合、複数あるグループのうちの最も古いグループに移動する
+        $group = $user->my_groups()->oldest('created_at')->first();
 
         if ($group) {
-            return route('group.dashboard', ['id' => $group->id]);
+            return route('group.dashboard', ['group_id' => $group->id]);
         }
 
         return '/game/select';

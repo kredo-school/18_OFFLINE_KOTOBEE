@@ -34,7 +34,8 @@ console.log("POST answer:", "{{ old('answer') }}");
 
     <!-- 画像（正解時は青枠） -->
     @if($question)
-    <div class="image-box {{ session('correct') ? 'correct-border' : '' }}">
+
+    <div class="image-box {{ session('correct') ? 'correct-border' : '' }}">        
         <img src="{{ asset($question->image_url) }}" class="word-image">
 
     </div>

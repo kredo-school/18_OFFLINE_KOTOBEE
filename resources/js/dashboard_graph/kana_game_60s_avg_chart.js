@@ -24,6 +24,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // 追加(高さ変更のため)
             plugins: {
                 title: {
                     display: true,

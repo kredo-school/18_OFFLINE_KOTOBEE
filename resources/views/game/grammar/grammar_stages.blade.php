@@ -45,14 +45,9 @@
 <div id="start-modal-root"></div>
 
 {{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
-<script>
+<script>  
 
-    window.stage_urls = @json(
-        $stages->filter(fn($s) => $s->id % 5 == 1)
-            ->sortBy('stage_id')
-            ->map(fn($s) => route('grammar.start_page', ['stage_id' => $s->stage_id]))
-            ->values()
-    );
+    window.stage_urls = @json($stages);
 
     console.log('stage_urls', stage_urls);
     

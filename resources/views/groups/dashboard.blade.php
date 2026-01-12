@@ -5,6 +5,22 @@
     @include('layouts.admin_side_bar')
 @endsection
 
+@once
+
+    @push('styles')        
+        @vite(['resources/css/dashboard/playcount-cards.css'])
+        @vite(['resources/css/dashboard/progress-cards.css'])
+        @vite(['resources/css/dashboard/streak-cards.css'])
+        @vite(['resources/css/dashboard/kana-charts.css'])
+    @endpush
+
+    @push('scripts')
+        @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
+        @vite(['resources/js/dashboard_graph/kana_game_time_attacks_avg_chart.js'])
+    @endpush
+
+@endonce
+
 
 @section('content')
     {{-- <h1>Group Dashboard</h1> --}}
@@ -47,16 +63,30 @@
         ];
         
     @endphp
+    
+    {{-- 連続プレイ日数（1枚） --}}
+    <x-dashboard.streak-cards :card="$streak_card" />
 
-    {{-- 60s-count 平均 --}}
-    <div style="max-width: 900px; margin: 12px auto;">
-        <canvas id="{{ $kana_game_60s_avg_id }}"></canvas>
-    </div>
+    {{-- 進捗度カード（複数） --}}
+    <x-dashboard.progress-cards :cards="$progress_cards" />    
 
-    {{-- time_attack 平均 --}}
-    <div style="max-width: 900px; margin: 12px auto;">
-        <canvas id="{{ $kana_game_avg_time_attacks_id }}"></canvas>
-    </div>
+    {{-- ゲームプレイ回数 --}}
+    <x-dashboard.playcount-cards :cards="$cards" />  
+
+
+    <div class="dashboard-charts">
+
+        {{-- 60s-count 平均 --}}
+        <div class="chart-box">
+            <canvas id="{{ $kana_game_60s_avg_id }}"></canvas>
+        </div>
+
+        {{-- time_attack 平均 --}}
+        <div class="chart-box">
+            <canvas id="{{ $kana_game_avg_time_attacks_id }}"></canvas>
+        </div>
+
+    </div>   
 
     {{-- 各jsファイルで使用する変数を宣言 --}}
     <script>
@@ -77,7 +107,8 @@
     </script>
 
     {{-- 各グラフ描写のjs読み込み --}}
-    @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
+    {{-- @vite(['resources/js/dashboard_graph/kana_game_60s_avg_chart.js'])
     @vite(['resources/js/dashboard_graph/kana_game_time_attacks_avg_chart.js'])
+    @vite(['resources/css/dashboard/playcount-cards.css']) --}}
 
 @endsection

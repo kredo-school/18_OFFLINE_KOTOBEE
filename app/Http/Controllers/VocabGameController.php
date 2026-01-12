@@ -38,6 +38,7 @@ class VocabGameController extends Controller
             'vocab_questions' => array_values($questionSet),
             'vocab_index' => 0,
             'vocab_start_time' => microtime(true),
+            'vocab_stage_id' => $stageId,
         ]);
 
         return $this->showQuestion();
@@ -256,6 +257,8 @@ class VocabGameController extends Controller
     public function finish()
     {
         $start = session('vocab_start_time');
+        $stageId = session('vocab_stage_id');
+
         $time = microtime(true) - $start;
         $time = min(round($time, 2), 9999.99);
 
@@ -268,6 +271,7 @@ class VocabGameController extends Controller
             'game_id' => 2,
             'setting_id' => null,
             'created_by_admin_id' => null,
+            'vcab_stage_id' => $stageId,
             'score' => null,
             'play_time' => round($time, 2),
         ]);
