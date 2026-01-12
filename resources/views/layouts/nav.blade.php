@@ -28,17 +28,26 @@
 
     <!-- Center -->
     <div class="kb-center">
+
         @auth
             @php
+
                 $approved_group = Auth::user()->approved_group();
+
             @endphp
 
             @if ($approved_group)
+
                 <span class="kb-group-name">
+
                     {{ $approved_group->name }}
+
                 </span>
+
             @endif
+            
         @endauth
+
     </div>
 
     <!-- Right -->

@@ -84,42 +84,61 @@ Route::middleware(['auth'])->group(function () {
     // Create Group 画面
     Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
 
-    // 仮の GroupAdmin ダッシュボード画面
-    // Route::get('/group/dashboard', function () {
-    //     return 'Dashboard (Coming Soon)';
-    // })->name('group.dashboard');    
+    // GroupAdmin ダッシュボード画面
         
     ///////// グループ管理 //////////
+
     /*** Create Group 画面 ***/
     Route::get('/group/create', [GroupController::class, 'create'])
         ->name('group.create');
-
-    /*** GroupAdmin ダッシュボード画面 ***/    
-    Route::get('/group/dashboard/{id}', [GroupController::class, 'show'])
-        ->name('group.dashboard');
     
-    /*** GroupAdmin 参加承認or拒否画面***/
-    Route::get('/group/approval/{id}', [GroupController::class, 'applicants_show'])
-        ->name('group.applicants');
+    Route::middleware(['group.owner'])->group(function () {
 
-    /*** GroupAdmin 参加承認の処理(複数) ***/
-    Route::post('/group/{group}/approval/bulk', [GroupController::class, 'applicant_bulk_approval'])
-        ->name('group.applicant.bulk.approval');
+        /*** GroupAdmin ダッシュボード画面 ***/
+        Route::get('/group/dashboard/{group_id}', [GroupController::class, 'show'])        
+            ->name('group.dashboard');
+        
+        /*** GroupAdmin 全生徒のプレイカウント画面 ***/
+        Route::get('/group/{group_id}/playcount', [GroupController::class, 'playcount'])
+            ->name('group.playcount');
+            
+        /*** GroupAdmin 全生徒の進捗度画面 ***/
+        Route::get('/group/{group_id}/progress', [GroupController::class, 'game_progress'])
+            ->name('group.progress');
 
-    /*** GroupAdmin 参加拒否の処理(複数) ***/
-    Route::post('/group/{group}/deny/bulk', [GroupController::class, 'applicant_bulk_deny'])
-        ->name('group.applicant.bulk.deny');
+        /*** GroupAdmin 全生徒の連続プレイ日数画面 ***/
+        Route::get('/group/{group_id}/streak', [GroupController::class, 'all_streak'])
+            ->name('group.streak');
+
+        /*** GroupAdmin 参加承認or拒否画面***/
+        Route::get('/group/approval/{group_id}', [GroupController::class, 'applicants_show'])
+            ->name('group.applicants');
+
+        /*** GroupAdmin 参加承認の処理(複数) ***/
+        Route::post('/group/{group}/approval/bulk', [GroupController::class, 'applicant_bulk_approval'])
+            ->name('group.applicant.bulk.approval');
+
+        /*** GroupAdmin 参加拒否の処理(複数) ***/
+        Route::post('/group/{group}/deny/bulk', [GroupController::class, 'applicant_bulk_deny'])
+            ->name('group.applicant.bulk.deny');
+
+        /*** GroupAdmin 参加承認の処理　***/
+        Route::post('/group/{group}/approval/{user}', [GroupController::class, 'applicant_approval'])
+            ->name('group.applicant.approval');
+
+        /*** GroupAdmin 参加拒否の処理 ***/
+        Route::post('/group/{group}/deny/{user}', [GroupController::class, 'applicant_deny'])
+            ->name('group.applicant.deny');
+        
+        /*** GroupAdmin グループ編集 ***/
+        Route::get('/group/edit/{group_id}', [GroupController::class, 'edit_show'])
+            ->name('group.edit');
+                    
+        /*** GroupAdmin グループ編集の処理 ***/
+        Route::post('group/edit/process/{group_id}', [GroupController::class, 'edit_process'])
+            ->name('group.edit.process');
+    });
     
-    /*** GroupAdmin 参加承認の処理　***/
-    Route::post('/group/{group}/approval/{user}', [GroupController::class, 'applicant_approval'])
-        ->name('group.applicant.approval');
-
-    /*** GroupAdmin 参加拒否の処理 ***/
-    Route::post('/group/{group}/deny/{user}', [GroupController::class, 'applicant_deny'])
-        ->name('group.applicant.deny');    
-    
-    
-
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
     // Step1: 支払い開始
@@ -130,6 +149,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
     // PayPal 完了コールバック
     Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
+
+
 
 
     ///////// Grammarゲーム //////////
@@ -177,6 +198,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('group/join/process/{group}', [StudentGroupController::class, 'join_submit'])
         ->name('group.join.submit');
 });
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/vocab/create', [AdminVocabController::class, 'create'])->name('admin.vocab.create');

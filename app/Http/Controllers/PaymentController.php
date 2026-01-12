@@ -107,12 +107,22 @@ class PaymentController extends Controller
             'paypal_order'   => json_encode($response),
         ]);
 
+        // ★ ユーザーを Group Admin（role = 2）に昇格
+        $user = Auth::user();
+        if ($user->role < 2) {
+            $user->role = 2;
+            $user->save();
+        }
+
         session()->forget('new_group');
 
-        // create_group.blade へ成功メッセージのみを渡す
-        return redirect()
-                ->route('group.create')
-                ->with('payment_success', true);
+        // ★ 作成した group_id を session に保存
+        session([
+            'payment_success'   => true,
+            'created_group_id'  => $group->id,
+        ]);
+
+        return redirect()->route('group.create');
     }
 
 
