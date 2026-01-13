@@ -46,7 +46,6 @@
 </div>
 
 
-
 {{-- 移動ボタン --}}
 <div class="controls">
 

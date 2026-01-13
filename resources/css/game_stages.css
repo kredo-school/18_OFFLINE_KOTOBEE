@@ -1,12 +1,3 @@
-@media (pointer: coarse){
-    html, body{
-        overflow: hidden;
-        height: 100%;
-        overscroll-behavior: none;
-        touch-action: none;
-    }   
-}
-
 html{
     height: 100%;
 }
@@ -33,6 +24,15 @@ body{
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }  
+
+@media (pointer: coarse){
+    .page{
+        overflow: hidden;              
+        -webkit-overflow-scrolling: auto;
+        overscroll-behavior: none;
+        touch-action: none;            
+    }
+}
 
 .stage-area {
     position: relative;
