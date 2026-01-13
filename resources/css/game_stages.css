@@ -1,32 +1,85 @@
-/* タッチパネル機器はスクロール不可 */
-@media (pointer: coarse) {
-    html, body {
+@media (pointer: coarse){
+    html, body{
         overflow: hidden;
         height: 100%;
         overscroll-behavior: none;
         touch-action: none;
-    }
-}         
+    }   
+}
 
-body {
-    background-color: #FFFFCE !important;
-    color: #000;
+html{
+    height: 100%;
+}
+  
+body{
+    margin: 0;
+    height: 100%;
+    background: transparent !important;
+}
+  
+.page{
+    height: 100vh;       
+    box-sizing: border-box;
+
+    padding-top: 60px; 
+    background: #FFFFCE;
+    background-clip: content-box;
+
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    font-family: sans-serif;
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}  
+
+.stage-area {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+.circle-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+/* Stage名 */
+#stage-info {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 20;
+    pointer-events: none;
+
+    /* ここから追加 */
+    background: rgba(255, 183, 40, 0.95); 
+    padding: 6px 14px;
+    border-radius: 9999px; 
+    border: 2px solid #000; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
 }
 
 .controls {
-    margin-bottom: 10px;
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    z-index: 9999;
+}
 
-    position: relative;
-    z-index: 10;
+.arrows {
+    display: flex;
+    gap: 200px;
 }
 
 .controls button {
@@ -60,32 +113,46 @@ body {
 .controls button:active {
     transform: scale(0.95);
 }
-  
 
-
-
-/* スマホでは矢印を表示しない */
-@media screen and (max-width: 768px) {
-    .controls {
-        display: none;
-    }
-}
-
-
-/* 円の領域 */
-.circle-container {
+.stage-area {
     position: relative;
     width: 400px;
     height: 400px;
 }
 
+.circle-container {
+    position: relative;   /* これがないと absolute の基準がない */
+    overflow: visible;    /* 大きくはみ出すので visible 推奨 */
+  }
+  
+.hex-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hex-bg svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* hexは前面に */
+.hex {
+    position: absolute;
+    z-index: 1;
+}
+
+
 /* 六角形の見た目 */
 .hex {
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 38%;
-    width: 100px;
-    height: 86px; /* 正六角形比率 */
+    width: 95px;
+    height: 95px; /* 正六角形比率 */
 
     display: flex;
     justify-content: center;
@@ -106,22 +173,51 @@ body {
     height: 100%;
 }
 
-/* 六角形の塗りと枠線 */
-.hex.played .hex-svg path {
-    fill: #FF9900;   /* 通常時の色 */
-    stroke: black;   /* 枠線の色 */
-    stroke-width: 2; /* 枠線の太さ */
+/* 外側の六角形（1本目の path） */
+.hex.played .hex-svg path:first-child {
+    fill: #F09813;
+    stroke: var(--hex-stroke, #AF6607);
+    stroke-width: 5;
 }
 
-.hex.unplayed .hex-svg path {
+/* 内側の装飾（2本目の path） */
+.hex.played .hex-svg path:last-child {
+    fill: #FFB54E;
+    fill-opacity: 0.37;
+}
+
+.hex.unplayed .hex-svg path:first-child {
     fill: #999999;
-    stroke: #555;
-    stroke-width: 2;
+    stroke: var(--hex-stroke, #555);
+    stroke-width: 5;
 }
 
-/* 六角形をクリックしたら濃いオレンジになる */
-.hex.played:active .hex-svg path {
-    fill: #e58a00; 
+
+.hex.unplayed .hex-svg path:last-child {
+    fill: #ffffff;
+    fill-opacity: 0.15;
+}
+
+/* 点滅アニメ（枠線＋発光） */
+@keyframes strokeBlink {
+    0%, 100% {
+        stroke-opacity: 1;
+    }
+    50% {
+        stroke-opacity: 0.8;
+    }
+}
+
+/* フォーカス中の親 */
+.hex.focused .hex-svg path:first-child {
+    --hex-stroke: #AF6607;        /* 点滅させたい色 */
+    animation: strokeBlink 1.5s ease-in-out infinite;
+}
+
+/* フォーカス中の親の周りの子（clickableが付く） */
+.hex.child.clickable .hex-svg path:first-child {
+    --hex-stroke: #AF6607; 
+    animation: strokeBlink 1.5s ease-in-out infinite;
 }
 
 /* 中央のラベル（数字） */
@@ -137,11 +233,6 @@ body {
 .hex.clickable {
     pointer-events: auto;
     cursor: pointer;
-}
-
-/* フォーカス中の六角形 */
-.hex.focused .hex-svg path {
-    background: #000;
 }
 
 /* 押した時の薄青いのを消す */
