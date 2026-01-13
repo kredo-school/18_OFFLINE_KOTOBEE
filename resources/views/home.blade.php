@@ -48,7 +48,6 @@
 </div>
 
 
-
 {{-- 移動ボタン --}}
 <div class="controls">
 
@@ -70,18 +69,18 @@
 
 </div>
 
-    {{-- モーダル差し込み --}}
-    <div id="start-modal-root"></div>
+{{-- モーダル差し込み --}}
+<div id="start-modal-root"></div>
 
-    {{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
-    <script>
-        // ステージ移動ためのurl配列
-        window.stage_urls = @json($stages);
+{{-- controllerから得たデータを受け取り、加工し、resources/js/game_stages.jsで使用 --}}
+<script>
+    // ステージ移動ためのurl配列
+    window.stage_urls = @json($stages);
 
-        // console.log('stage_urls', stage_urls);
+    // console.log('stage_urls', stage_urls);
 
-        // 各ステージのid配列
-        window.played_stage_ids = @json($played_stage_ids);
+    // 各ステージのid配列
+    window.played_stage_ids = @json($played_stage_ids);
 
-        // console.log('played_stage_ids', played_stage_ids);
-    </script>
+    // console.log('played_stage_ids', played_stage_ids);
+</script>
