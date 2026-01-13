@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GameResult;
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\GroupMember;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -52,20 +53,20 @@ class GroupController extends Controller
         // すべての値に price を追加して PaymentController に POST で送る
         return redirect()->route('payment.create', $request->all() + ['price' => $price]);
     }
-    
+
     /**
      * グループダッシュボード画面表示
      */
     public function show($id)
     {
-        /***** カナゲーム用のグラフ作成 *****/        
+        /***** カナゲーム用のグラフ作成 *****/
         $group = Group::with([
             'users' => function ($q) {
                 $q->wherePivot('status', 2);
             },
             'users.game_results.game_setting'
         ])->findOrFail($id);
-                
+
         $subtypes = ['seion', 'dakuon', 'youon'];
         $scripts  = ['hiragana', 'katakana'];
 
@@ -90,7 +91,7 @@ class GroupController extends Controller
                 // 最大値の平均を計算
                 $avg_scores_60s[$script][$subtype] = $user_max_scores->isEmpty() ? 0 : round($user_max_scores->avg(), 2);
             }
-        }        
+        }
         // dd($avg_scores_60s);
 
 
@@ -129,7 +130,7 @@ class GroupController extends Controller
             'kana'       => 'group.kana.playcount',
             'vocabulary' => 'group.vocabulary.playcount',
             'grammar'    => 'group.grammar.playcount',
-        ];     
+        ];
 
         $cards = [];
 
@@ -142,16 +143,16 @@ class GroupController extends Controller
                 ->select('user_id', DB::raw('COUNT(*) as play_count'))
                 ->groupBy('user_id')
                 ->pluck('play_count', 'user_id');
-            
+
             //　グループ全体に対してプレイ回数を集計(0回を含めるため)
-            $all_play_counts = $group->users->map(function ($u) use ($counts){
+            $all_play_counts = $group->users->map(function ($u) use ($counts) {
                 return [
                     'user_id' => $u->id,
                     'name' => $u->name,
                     'play_count' => (int) ($counts[$u->id] ?? 0),
                 ];
             });
-                
+
             // dd($counts);
 
             // top5を取得
@@ -163,7 +164,7 @@ class GroupController extends Controller
                     $row['rank'] = $index + 1;
                     return $row;
                 });
-            
+
             // dd($top5);
 
             // 全生徒の総プレイ数
@@ -171,7 +172,7 @@ class GroupController extends Controller
                 ->whereIn('user_id', $group_user_ids)
                 ->where('game_id', $game_id)
                 ->count();
-                
+
             $user_count = max(1, $group_user_ids->count());
 
             // dd($user_count);
@@ -182,7 +183,7 @@ class GroupController extends Controller
             //     'avg' => $avg_plays,
             //     'top5' => $top5,                
             // ];
-            
+
             $cards[$key] = [
                 'avg' => $avg_plays,
                 'top5' => $top5,
@@ -190,7 +191,7 @@ class GroupController extends Controller
                     'group_id' => $group->id,
                     'game' => $key,
                 ]),
-            ]; 
+            ];
         }
 
         /***** 各生徒のゲームの進捗度のデータを作成 *****/
@@ -220,7 +221,7 @@ class GroupController extends Controller
                 ->select('user_id', DB::raw("MAX($col) as max_stage"))
                 ->groupBy('user_id')
                 ->pluck('max_stage', 'user_id');
-                
+
             $all_progress = $group->users->map(function ($u) use ($max_stages, $stage_label) {
 
                 $max = $max_stages[$u->id] ?? null;
@@ -233,7 +234,6 @@ class GroupController extends Controller
                     'stage_id' => $next_stage_id,
                     'progress_label' => $stage_label($next_stage_id),
                 ];
-
             });
 
             // 進捗度top5
@@ -244,8 +244,8 @@ class GroupController extends Controller
                 ->map(function ($row, $index) {
                     $row['rank'] = $index + 1;
                     return $row;
-                });          
-                
+                });
+
             $progress_cards[$key] = [
                 'top5' => $top5,
                 'view_all_url' => route('group.progress', [ // route
@@ -253,7 +253,6 @@ class GroupController extends Controller
                     'game' => $key,
                 ]),
             ];
-
         }
 
         /***** streakランキング用データを作成 *****/
@@ -280,7 +279,7 @@ class GroupController extends Controller
             'rest' => $streak_ranking->slice(3, 7), // top4~7
             'view_all_url' => route('group.streak', ['group_id' => $group->id]),
         ];
-        
+
         return view('groups.dashboard', compact(
             'group',
             'avg_scores_60s',
@@ -289,18 +288,18 @@ class GroupController extends Controller
             'progress_cards',
             'streak_card',
         ));
-
     }
 
     /** 
      * 全生徒のゲームプレイ回数を表示
      */
-    public function playcount(Request $request, $id) {
+    public function playcount(Request $request, $id)
+    {
 
         $group = Group::with([
             'users' => function ($q) {
                 $q->wherePivot('status', 2); // グループ参加済みのみ
-            }        
+            }
         ])->findOrFail($id);
 
         // 全グループのユーザid
@@ -338,7 +337,7 @@ class GroupController extends Controller
             ->select('user_id', DB::raw('COUNT(*) as play_count'))
             ->groupBy('user_id')
             ->pluck('play_count', 'user_id');
-            
+
         //　グループ全体に対してプレイ回数を集計(0回を含めるため)
         $all_play_counts = $group->users->map(function ($u) use ($counts) {
             return [
@@ -348,7 +347,7 @@ class GroupController extends Controller
             ];
         });
 
-         // rankクリックでascとdescを切り替え
+        // rankクリックでascとdescを切り替え
         $sorted = ($order === 'asc')
             ? $all_play_counts->sortBy('play_count')
             : $all_play_counts->sortByDesc('play_count');
@@ -369,30 +368,30 @@ class GroupController extends Controller
             return $row;
         });
 
-        $total_plays = GameResult::query()        
+        $total_plays = GameResult::query()
             ->whereIn('user_id', $group_user_ids)
             ->where('game_id', $game_id)
             ->count();
-    
+
         $user_count = max(1, $group_user_ids->count());
 
-        $avg_plays = round($total_plays / $user_count, 2);        
-    
+        $avg_plays = round($total_plays / $user_count, 2);
+
         return view('groups.playcount_view_all', [
-            'group' => $group, 
+            'group' => $group,
             'selected_key' => $selected_key, // プルダウンで選ばれたキー
             'game_titles' => $game_titles, // プルダウン用
             'avg_plays' => $avg_plays, // 平均
             'ranking' => $ranking, // ランキング
             'order' => $order, // asc or desc
-        ]);       
-
+        ]);
     }
 
     /**
      * 全生徒のゲーム進捗度を表示
      */
-    public function game_progress(Request $request, $id) {
+    public function game_progress(Request $request, $id)
+    {
 
         $group = Group::with([
             'users' => function ($q) {
@@ -418,7 +417,7 @@ class GroupController extends Controller
 
         // プルダウン選択(default: vocabulary)
         $selected_key = $request->query('game', 'vocabulary');
-        
+
         if (!isset($game_key_to_meta[$selected_key])) {
             $selected_key = 'vocabulary';
         }
@@ -452,7 +451,7 @@ class GroupController extends Controller
         $all_progress = $group->users->map(function ($u) use ($max_stages, $stage_label) {
             $max = $max_stages[$u->id] ?? null;
             $next_stage_id = is_null($max) ? 1 : ((int)$max + 1);
-    
+
             return [
                 'user_id'  => $u->id,
                 'name'     => $u->name,
@@ -490,7 +489,8 @@ class GroupController extends Controller
     /**
      * 全生徒の連続プレイ日数を表示
      */
-    public function all_streak(Request $request, $id) {
+    public function all_streak(Request $request, $id)
+    {
 
         $group = Group::with([
             'users' => function ($q) {
@@ -532,8 +532,6 @@ class GroupController extends Controller
             'ranking'    => $ranking,
             'order'      => $order,
         ]);
-
-
     }
 
 
@@ -542,8 +540,8 @@ class GroupController extends Controller
      */
     public function applicants_show($id)
     {
-        $group = Group::findOrFail($id);       
-        
+        $group = Group::findOrFail($id);
+
         $applicants = $group->users()
             ->orderByPivot('status', 'asc')
             ->orderByPivot('created_at', 'asc')
@@ -556,7 +554,7 @@ class GroupController extends Controller
      * 参加申請処理
      */
     public function applicant_approval(Group $group, User $user)
-    {        
+    {
         // グループadminが操作しているか
         abort_unless($group->owner_id === Auth::id(), 403);
 
@@ -580,7 +578,7 @@ class GroupController extends Controller
             ->where('group_id', $group->id)
             ->where('user_id', $user->id)
             ->delete();
-        
+
         return back()->with('success', 'Denied.');
     }
 
@@ -588,7 +586,7 @@ class GroupController extends Controller
      * 参加申請処理(複数)
      */
     public function applicant_bulk_approval(Request $request, Group $group)
-    {        
+    {
         abort_unless(Auth::check(), 401);
         abort_unless($group->owner_id === Auth::id(), 403);
 
@@ -599,7 +597,7 @@ class GroupController extends Controller
             ->where('group_id', $group->id)
             ->whereIn('user_id', $user_ids)
             ->update(['status' => 2]);
-            
+
         return back()->with('success', 'Selected users approved.');
     }
 
@@ -610,7 +608,7 @@ class GroupController extends Controller
     {
         abort_unless(Auth::check(), 401);
         abort_unless($group->owner_id === Auth::id(), 403);
-        
+
         // user_idの配列作成
         $user_ids = explode(',', $request->user_ids);
 
@@ -618,7 +616,7 @@ class GroupController extends Controller
             ->where('group_id', $group->id)
             ->whereIn('user_id', $user_ids)
             ->delete();
-            
+
         return back()->with('success', 'Selected users denied.');
     }
 
@@ -634,12 +632,13 @@ class GroupController extends Controller
     {
         $group->users()->detach($user->id);
         return redirect()->route('groups.students', $group)
-                         ->with('success', "$user->name をグループから削除しました。");
+            ->with('success', "$user->name をグループから削除しました。");
     }
     /**
      * グループ編集
      */
-    public function edit_show($id) {
+    public function edit_show($id)
+    {
         $group = Group::findOrFail($id);
         return view('groups.edit', compact('group'));
     }
@@ -662,4 +661,57 @@ class GroupController extends Controller
             ->with('success', 'Group updated successfully');
     }
 
+
+
+
+    /**
+     * 削除確認画面
+     */
+    public function deleteConfirm(Group $group)
+    {
+        // 管理者チェック
+        if ($group->owner_id !== Auth::id()) {
+            abort(403, '権限がありません');
+        }
+
+        return view('groups.delete', compact('group'));
+    }
+
+    /**
+     * 削除処理
+     */
+
+
+
+
+    public function destroy(Group $group)
+    {
+        // Owner check
+        if ($group->owner_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Delete group and its members
+        DB::transaction(function () use ($group) {
+            GroupMember::where('group_id', $group->id)->delete();
+            $group->delete();
+        });
+
+        // Check if the user still owns other groups
+        $nextGroup = Group::where('owner_id', auth()->id())
+            ->orderBy('created_at', 'asc') // or updated_at / id
+            ->first();
+
+        if ($nextGroup) {
+            // User still owns another group → redirect to its dashboard
+            return redirect()
+                ->route('group.dashboard', ['group_id' => $nextGroup->id])
+                ->with('success', 'The group has been deleted.');
+        }
+
+        // User owns no groups → redirect to Game Select
+        return redirect()
+            ->route('game.select')
+            ->with('success', 'The group has been deleted.');
+    }
 }

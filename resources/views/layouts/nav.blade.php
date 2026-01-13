@@ -54,9 +54,9 @@
     <div class="kb-right">
         @auth
             <!-- Avatar -->
-            <a href="#" class="kb-avatar-link">
+            <a href="{{ route('profile')}}" class="kb-avatar-link">
                 @if (Auth::user()->avatar_url)
-                    <img src="{{ asset('storage/images/avatars/' . Auth::user()->avatar_url) }}"
+                    <img src="{{ asset('storage/' . Auth::user()->avatar_url) }}"
                          class="kb-avatar">
                 @else
                     <i class="fa-solid fa-circle-user kb-avatar-icon"></i>

@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+{{-- admin sidebar --}}
+@section('admin_sidebar')
+    @include('layouts.admin_side_bar')
+@endsection
+
 @push('styles')
     <style>
         body {

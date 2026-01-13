@@ -95,13 +95,13 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['group.owner'])->group(function () {
 
         /*** GroupAdmin ダッシュボード画面 ***/
-        Route::get('/group/dashboard/{group_id}', [GroupController::class, 'show'])        
+        Route::get('/group/dashboard/{group_id}', [GroupController::class, 'show'])
             ->name('group.dashboard');
-        
+
         /*** GroupAdmin 全生徒のプレイカウント画面 ***/
         Route::get('/group/{group_id}/playcount', [GroupController::class, 'playcount'])
             ->name('group.playcount');
-            
+
         /*** GroupAdmin 全生徒の進捗度画面 ***/
         Route::get('/group/{group_id}/progress', [GroupController::class, 'game_progress'])
             ->name('group.progress');
@@ -129,16 +129,16 @@ Route::middleware(['auth'])->group(function () {
         /*** GroupAdmin 参加拒否の処理 ***/
         Route::post('/group/{group}/deny/{user}', [GroupController::class, 'applicant_deny'])
             ->name('group.applicant.deny');
-        
+
         /*** GroupAdmin グループ編集 ***/
         Route::get('/group/edit/{group_id}', [GroupController::class, 'edit_show'])
             ->name('group.edit');
-                    
+
         /*** GroupAdmin グループ編集の処理 ***/
         Route::post('group/edit/process/{group_id}', [GroupController::class, 'edit_process'])
             ->name('group.edit.process');
     });
-    
+
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
     // Step1: 支払い開始
@@ -224,3 +224,16 @@ Route::get('/groups/{group}/students', [GroupController::class, 'students'])
 Route::delete('/groups/{group}/students/{user}', [GroupController::class, 'removeStudent'])
     ->name('groups.students.remove');
 
+// routes/web.php
+
+
+
+Route::middleware(['auth'])->group(function () {
+    // 削除確認ページ
+    Route::get('/groups/{group}/delete', [GroupController::class, 'deleteConfirm'])
+        ->name('groups.delete.confirm');
+
+    // 削除処理
+    Route::delete('/groups/{group}', [GroupController::class, 'destroy'])
+        ->name('groups.destroy');
+});
