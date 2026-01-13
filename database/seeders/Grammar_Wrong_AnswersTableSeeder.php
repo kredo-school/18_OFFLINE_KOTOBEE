@@ -21,7 +21,7 @@ class Grammar_Wrong_AnswersTableSeeder extends Seeder
             // 例
             ['question_id'=>1, 'wrong_order'=>'2,1,0,3', 'wrong_sentence'=>'せいと は わたし です', 'wrong_image_url'=>'/storage/images/game_images/grammar/stage_1/wrong_images/question_1/1.png', 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
 
-            ['question_id'=>2, 'wrong_order'=>'2,1,0,3', 'wrong_sentence'=>'せんせい は わたし です', 'wrong_image_url'=>'/storage/images/game_images/grammar/stage_1/wrong_images/question_2/1.png', 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'wrong_order'=>'2,1,0,3,4', 'wrong_sentence'=>'バナナ が さる を 食べます', 'wrong_image_url'=>'/storage/images/game_images/grammar/stage_1/wrong_images/question_2/1.png', 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
 
             ['question_id'=>3, 'wrong_order'=>'2,1,0,3,4', 'wrong_sentence'=>'ともだち は せんせい では ありません', 'wrong_image_url'=>'/storage/images/game_images/grammar/stage_1/wrong_images/question_3/1.png', 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
             

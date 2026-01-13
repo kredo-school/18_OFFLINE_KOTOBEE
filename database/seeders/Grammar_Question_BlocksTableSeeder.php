@@ -22,10 +22,11 @@ class Grammar_Question_BlocksTableSeeder extends Seeder
             ['question_id'=>1, 'block_text'=>'せいと', 'part_of_speech'=>1, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
             ['question_id'=>1, 'block_text'=>'です', 'part_of_speech'=>6, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()], 
             
-            ['question_id'=>2, 'block_text'=>'わたし', 'part_of_speech'=>1, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
-            ['question_id'=>2, 'block_text'=>'は', 'part_of_speech'=>5, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
-            ['question_id'=>2, 'block_text'=>'せんせい', 'part_of_speech'=>1, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
-            ['question_id'=>2, 'block_text'=>'です', 'part_of_speech'=>6, 'order_number'=>0123, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'block_text'=>'さる', 'part_of_speech'=>1, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'block_text'=>'が', 'part_of_speech'=>5, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'block_text'=>'バナナ', 'part_of_speech'=>1, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'block_text'=>'を', 'part_of_speech'=>5, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
+            ['question_id'=>2, 'block_text'=>'食べます', 'part_of_speech'=>2, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
 
             ['question_id'=>3, 'block_text'=>'せんせい', 'part_of_speech'=>1, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
             ['question_id'=>3, 'block_text'=>'は', 'part_of_speech'=>5, 'order_number'=>01234, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()],
