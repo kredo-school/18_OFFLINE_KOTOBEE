@@ -1,5 +1,5 @@
 const container = document.getElementById("circle");
-const info = document.getElementById("info");
+const info = document.getElementById("stage-info");
 
 
 const count = 6;
@@ -18,9 +18,34 @@ console.log('theta', theta);
 const main_centers = [];
 
 // 共通の六角形作成のSVGパス
-const HEX_PATH_D = "M90.6973 33.5427C94.0734 39.3867 94.1801 46.5455 91.018 52.4733L90.7027 53.0427L77.2561 76.3473C73.7745 82.3815 67.3378 86.101 60.3711 86.103L33.4649 86.1105C26.4983 86.1124 20.0595 82.3965 16.5745 76.3642L3.11483 53.0672C-0.26126 47.2233 -0.368008 40.0644 2.79412 34.1366L3.10939 33.5672L16.556 10.2627C20.0376 4.22842 26.4743 0.509948 33.441 0.507956L60.3472 0.500441C67.3138 0.498542 73.7526 4.21257 77.2376 10.2447L90.6973 33.5427Z";
+// const HEX_PATH_D = "M90.6973 33.5427C94.0734 39.3867 94.1801 46.5455 91.018 52.4733L90.7027 53.0427L77.2561 76.3473C73.7745 82.3815 67.3378 86.101 60.3711 86.103L33.4649 86.1105C26.4983 86.1124 20.0595 82.3965 16.5745 76.3642L3.11483 53.0672C-0.26126 47.2233 -0.368008 40.0644 2.79412 34.1366L3.10939 33.5672L16.556 10.2627C20.0376 4.22842 26.4743 0.509948 33.441 0.507956L60.3472 0.500441C67.3138 0.498542 73.7526 4.21257 77.2376 10.2447L90.6973 33.5427Z";
 
-// 各ステージのurlの配列
+
+const HEX_SVG_TEMPLATE = `
+<svg
+  class="hex-svg"
+  width="150"
+  height="150"
+  viewBox="0 0 101 101"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M92.073 41.2522C95.2006 46.6658 95.2025 53.3368 92.0779 58.7522L78.6313 82.0577C75.5067 87.4729 69.7304 90.8102 63.4785 90.812L36.5722 90.8195C30.3203 90.8212 24.5421 87.4871 21.4145 82.0737L7.95488 58.7757C4.82733 53.3621 4.82546 46.6911 7.95 41.2757L21.3966 17.9702C24.5212 12.5551 30.2975 9.21873 36.5494 9.21694L63.4557 9.20943C69.7076 9.20773 75.4858 12.5408 78.6134 17.9542L92.073 41.2522Z"
+    fill="#F09813"
+    stroke="#AF6607"
+    stroke-width="5"
+  />
+  <path
+    d="M22.5806 52.5984C21.6096 51.0022 21.6096 48.9978 22.5806 47.4016L34.2892 28.1529C35.1963 26.6616 36.8155 25.7513 38.561 25.7513H62.439C64.1845 25.7513 65.8037 26.6616 66.7108 28.1529L78.4194 47.4016C79.3904 48.9978 79.3904 51.0022 78.4194 52.5984L66.7108 71.8471C65.8037 73.3384 64.1845 74.2487 62.439 74.2487H38.561C36.8155 74.2487 35.1963 73.3384 34.2892 71.8471L22.5806 52.5984Z"
+    fill="#FFB54E"
+    fill-opacity="0.37"
+  />
+</svg>
+`;
+
+
+// 各ステージのurlの配列controls
 const hrefs = window.stage_urls || [];
 let stage_id = 0;
 
@@ -50,6 +75,45 @@ function played_stage_check(hex, stage_id) {
         });
     }
 }
+
+// でかい背景
+function fit_background_to_hexes() {
+    const bg = container.querySelector(".hex-bg");
+    if (!bg) return;
+  
+    const hexes = container.querySelectorAll(".hex");
+    if (!hexes.length) return;
+  
+    const containerRect = container.getBoundingClientRect();
+  
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  
+    hexes.forEach((el) => {
+      const r = el.getBoundingClientRect();
+  
+      // container左上を(0,0)にした相対座標に変換
+      const x1 = r.left - containerRect.left;
+      const y1 = r.top - containerRect.top;
+      const x2 = r.right - containerRect.left;
+      const y2 = r.bottom - containerRect.top;
+  
+      minX = Math.min(minX, x1);
+      minY = Math.min(minY, y1);
+      maxX = Math.max(maxX, x2);
+      maxY = Math.max(maxY, y2);
+    });
+  
+    const pad = 30; // 余白（大きめ推奨）
+    const left = minX - pad;
+    const top = minY - pad;
+    const width = (maxX - minX) + pad * 2;
+    const height = (maxY - minY) + pad * 2;
+  
+    bg.style.transform = `translate(${left}px, ${top}px)`;
+    bg.style.width = `${width}px`;
+    bg.style.height = `${height}px`;
+}
+  
 
 
 // 各ステージのidセット
@@ -115,14 +179,14 @@ function create_hex_element(label_text, href="#") {
     const a = document.createElement("a");
     a.className = "hex";
     a.href = href;
+  
     a.innerHTML = `
-        <svg class="hex-svg" viewBox="0 0 94 87" xmlns="http://www.w3.org/2000/svg">
-            <path d="${HEX_PATH_D}" />
-        </svg>
+        ${HEX_SVG_TEMPLATE}
         <span class="hex-label">${label_text}</span>
-    `
+    `;
     return a;
-}
+  }
+  
 
 for (let i = 0; i < count; i++) {
     const start_angle = -(90 + theta_deg);
@@ -178,6 +242,8 @@ for (let j = 0; j < child_count; j++) {
 
 }
 
+fit_background_to_hexes();
+
 
 function update_focus(focus_index) {
 
@@ -215,6 +281,7 @@ function update_focus(focus_index) {
     // テキスト内容変更
     info.textContent = `Stage: ${focus_index + 1}`;
 }
+  
 
 
 // 現在中心としている中心六角形

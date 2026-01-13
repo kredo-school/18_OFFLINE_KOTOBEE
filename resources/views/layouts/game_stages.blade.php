@@ -25,7 +25,9 @@
 
     {{-- 各ページ固有のviteファイルを読み込む --}}
     @stack('styles')
+
     @stack('scripts')
+
 </head>
 
 <body>
@@ -37,7 +39,9 @@
     <!-- ========================== -->
 
     <!-- Body Content -->
-    @yield('content')
+    <div class="page">
+        @yield('content')
+    </div>   
 
     @yield('scripts')
 

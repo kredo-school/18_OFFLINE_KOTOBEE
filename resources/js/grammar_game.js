@@ -313,6 +313,7 @@ class MainScene extends Phaser.Scene {
         const q = this.questions[this.cur_question_i];
         
         console.log('q.scale', q.scale);
+
         // 画像を出力
         this.questionImage = this.add.image(
             this.whole_W / 3,
@@ -537,8 +538,8 @@ class MainScene extends Phaser.Scene {
     }
 
     adjust_image_size() {
-        const max_w = this.cx / 2.5;
-        const max_h = this.cy / 2.5;
+        const max_w = this.cx / 1.5;
+        const max_h = this.cy / 1.5;
         const max_size = Math.min(max_w, max_h);
         for (let i = 0; i < this.questions.length; i++) {
             const q = this.questions[i];
@@ -1942,7 +1943,7 @@ class MainScene extends Phaser.Scene {
 
         this.tweens.add({
             targets: conts,
-            x: '+=6',
+            x: '-=3',
             yoyo: true,
             repeat: 5,
             duration: 40,
@@ -1956,7 +1957,7 @@ class MainScene extends Phaser.Scene {
             }
         });
 
-    }
+    }   
 
     ///// checkやcontinueなどのbutton /////
     create_button(x, y, label, color, opacity, on_click) {

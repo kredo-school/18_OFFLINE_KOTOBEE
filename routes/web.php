@@ -91,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     /*** Create Group 画面 ***/
     Route::get('/group/create', [GroupController::class, 'create'])
         ->name('group.create');
-    
+        
     Route::middleware(['group.owner'])->group(function () {
 
         /*** GroupAdmin ダッシュボード画面 ***/
