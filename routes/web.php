@@ -81,11 +81,53 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/game/kana/save',  [KanaGameController::class, 'saveResult'])
         ->name('kana.saveResult');
 
-    // Create Group 画面
-    Route::get('/group/create', [GroupController::class, 'create'])->name('group.create');
+    ///////// Grammarゲーム //////////
+    /*** grammarゲーム：ステージ選択画面 ***/
+    Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
+        ->name('grammar.stages');
 
-    // GroupAdmin ダッシュボード画面
-        
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');
+    /*** grammarゲーム：ゲームスタート画面 ***/
+    Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
+        ->name('grammar.start_page');
+
+    /*** grammarゲーム：ゲーム画面表示用 ***/
+    Route::get('/grammar/play/{stage_id}', [GrammarGameController::class, 'play'])
+        ->name('grammar.play');
+
+    /*** grammarゲーム：ゲーム開始用API ***/
+    Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
+        ->name('grammar.start');
+
+    /*** grammarゲーム:結果データ保存***/
+    Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
+        ->name('grammar.save_result');
+
+    //////profile///////
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabulary.index');
+    Route::get('/grammar', [GrammarController::class, 'index'])->name('grammar.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    ///////// 生徒のグループ機能 /////////    
+    /*** グループ検索画面 ***/
+    Route::get('/group/search', [StudentGroupController::class, 'search'])
+        ->name('group.search');
+
+    /*** グループ申請画面 ***/
+    Route::get('group/join/{group}', [StudentGroupController::class, 'join'])
+        ->name('group.join');
+
+    /*** グループ申請処理 ***/
+    Route::post('group/join/process/{group}', [StudentGroupController::class, 'join_submit'])
+        ->name('group.join.submit');
+
+
+    
     ///////// グループ管理 //////////
 
     /*** Create Group 画面 ***/
@@ -137,103 +179,55 @@ Route::middleware(['auth'])->group(function () {
         /*** GroupAdmin グループ編集の処理 ***/
         Route::post('group/edit/process/{group_id}', [GroupController::class, 'edit_process'])
             ->name('group.edit.process');
+            
+        /*** Vocab 問題作成画面 ***/
+        Route::get('/admin/{group}/vocab/create', [AdminVocabController::class, 'create'])
+            ->name('admin.vocab.create');
+
+        /*** Vocab 問題保存 ***/
+        Route::post('/admin/{group}/vocab/store', [AdminVocabController::class, 'store'])->name('admin.vocab.store');
+        
+        /*** Grammar 問題作成画面 ***/
+        Route::get('/admin/{group}/grammar/create', [AdminGrammarController::class, 'create'])
+            ->name('admin.grammar.create');
+
+        /*** Grammar 問題保存 ***/
+        Route::post('/admin/{group}/grammar/store', [AdminGrammarController::class, 'store'])->name('admin.grammar.store');
+        
+        /*** 生徒削除画面 ***/
+        Route::get('/groups/{group}/students', [GroupController::class, 'students'])
+            ->name('groups.students');
+
+        /*** 生徒削除処理 ***/
+        Route::delete('/groups/{group}/students/{user}', [GroupController::class, 'removeStudent'])
+            ->name('groups.students.remove');
+        
+        /*** グループ削除ページ ***/
+        Route::get('/groups/{group}/delete', [GroupController::class, 'deleteConfirm'])
+            ->name('groups.delete.confirm');
+
+        /*** グループ削除処理 ***/
+        Route::delete('/groups/{group}', [GroupController::class, 'destroy'])
+            ->name('groups.destroy');
+        
     });
 
     // 送信（決済はまだ未実装）
     Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
+
     // Step1: 支払い開始
     Route::get('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+
     // Step2: PayPalから戻る（成功）
     Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+
     // Step3: キャンセル
     Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+
     // PayPal 完了コールバック
     Route::get('/payment/complete', [PaymentController::class, 'complete'])->name('payment.complete');
 
-
-
-
-    ///////// Grammarゲーム //////////
-    /*** grammarゲーム：ステージ選択画面 ***/
-    Route::get('/grammar/stages', [GrammarGameController::class, 'stages'])
-        ->name('grammar.stages');
-
-    /*** grammarゲーム：ゲーム開始用API ***/
-    Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
-        ->name('grammar.start');
-    /*** grammarゲーム：ゲームスタート画面 ***/
-    Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
-        ->name('grammar.start_page');
-
-    /*** grammarゲーム：ゲーム画面表示用 ***/
-    Route::get('/grammar/play/{stage_id}', [GrammarGameController::class, 'play'])
-        ->name('grammar.play');
-
-    /*** grammarゲーム：ゲーム開始用API ***/
-    Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
-        ->name('grammar.start');
-
-    /*** grammarゲーム:結果データ保存***/
-    Route::post('/game/grammar/save', [GrammarGameController::class, 'save_result'])
-        ->name('grammar.save_result');
-
-    //////profile///////
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabulary.index');
-    Route::get('/grammar', [GrammarController::class, 'index'])->name('grammar.index');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    ///////// 生徒のグループ機能 /////////    
-    /*** グループ検索画面 ***/
-    Route::get('/group/search', [StudentGroupController::class, 'search'])
-        ->name('group.search');
-
-    /*** グループ申請画面 ***/
-    Route::get('group/join/{group}', [StudentGroupController::class, 'join'])
-        ->name('group.join');
-
-    /*** グループ申請処理 ***/
-    Route::post('group/join/process/{group}', [StudentGroupController::class, 'join_submit'])
-        ->name('group.join.submit');
 });
 
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/vocab/create', [AdminVocabController::class, 'create'])->name('admin.vocab.create');
-    Route::post('/admin/vocab/store', [AdminVocabController::class, 'store'])->name('admin.vocab.store');
-});
-
-
-
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    // Grammar 問題作成画面
-    Route::get('/grammar/create', [AdminGrammarController::class, 'create'])->name('admin.grammar.create');
-    // Grammar 問題保存
-    Route::post('/grammar/store', [AdminGrammarController::class, 'store'])->name('admin.grammar.store');
-});
-
-
-
-
-Route::get('/groups/{group}/students', [GroupController::class, 'students'])
-    ->name('groups.students');
-
-Route::delete('/groups/{group}/students/{user}', [GroupController::class, 'removeStudent'])
-    ->name('groups.students.remove');
-
-// routes/web.php
-
-
-
-Route::middleware(['auth'])->group(function () {
-    // 削除確認ページ
-    Route::get('/groups/{group}/delete', [GroupController::class, 'deleteConfirm'])
-        ->name('groups.delete.confirm');
-
-    // 削除処理
-    Route::delete('/groups/{group}', [GroupController::class, 'destroy'])
-        ->name('groups.destroy');
-});

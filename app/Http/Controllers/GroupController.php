@@ -620,20 +620,6 @@ class GroupController extends Controller
         return back()->with('success', 'Selected users denied.');
     }
 
-    // グループ生徒一覧
-    public function students(Group $group)
-    {
-        $students = $group->users; // belongsToMany 前提
-        return view('groups.students', compact('group', 'students'));
-    }
-
-    // 生徒削除
-    public function removeStudent(Group $group, User $user)
-    {
-        $group->users()->detach($user->id);
-        return redirect()->route('groups.students', $group)
-            ->with('success', "$user->name をグループから削除しました。");
-    }
     /**
      * グループ編集
      */
@@ -661,8 +647,20 @@ class GroupController extends Controller
             ->with('success', 'Group updated successfully');
     }
 
+    // グループ生徒一覧
+    public function students(Group $group)
+    {
+        $students = $group->users; // belongsToMany 前提
+        return view('groups.students', compact('group', 'students'));
+    }
 
-
+    // 生徒削除
+    public function removeStudent(Group $group, User $user)
+    {
+        $group->users()->detach($user->id);
+        return redirect()->route('groups.students', $group)
+            ->with('success', "$user->name をグループから削除しました。");
+    }
 
     /**
      * 削除確認画面
@@ -680,10 +678,6 @@ class GroupController extends Controller
     /**
      * 削除処理
      */
-
-
-
-
     public function destroy(Group $group)
     {
         // Owner check
@@ -714,4 +708,5 @@ class GroupController extends Controller
             ->route('game.select')
             ->with('success', 'The group has been deleted.');
     }
+
 }

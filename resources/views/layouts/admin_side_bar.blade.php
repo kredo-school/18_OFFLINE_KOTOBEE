@@ -22,21 +22,32 @@
             <a href="{{ route('group.edit', ['group_id' => $group->id]) }}"
                 class="{{ request()->routeIs('group.edit') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-column"></i>Edit Group
+            </a>            
+
+            <a href="{{ route('admin.vocab.create', ['group' => $group->id]) }}"
+                class="{{ request()->routeIs('admin.vocab.*') || request()->routeIs('admin.grammar.*') ? 'active' : '' }}">
+                 <i class="fa-solid fa-circle-plus"></i> Create Questions
             </a>
-            <a href="{{ route('admin.vocab.create') }}"
-                class="{{ request()->routeIs('admin.vocab.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-circle-plus"></i>Create Questions
+            
+            <a href="{{ route('groups.students', $group->id) }}"
+                class="{{ request()->routeIs('groups.students') ? 'active' : '' }}">
+                <i class="fa-solid fa-trash-can"></i>
+                Remove Members
             </a>
+
             <a href="{{ route('groups.delete.confirm', $group->id) }}"
-                class="{{ request()->routeIs('groups.delete.*') ? 'active' : '' }}">
+                class="{{ request()->routeIs('groups.delete.confirm') ? 'active' : '' }}">
                 <i class="fa-solid fa-trash"></i>
                 Delete Group
-            </a>
+            </a>            
+
         @endif
-        <a href="#"><i class="fa-regular fa-comment-dots"></i>Awards</a>
+
+        {{-- <a href="#"><i class="fa-regular fa-comment-dots"></i>Awards</a>
         <a href="#"><i class="fa-regular fa-envelope"></i>Messages</a>
         <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
-        <a href="#"><i class="fa-solid fa-right-from-bracket"></i>Log out</a>
+        <a href="#"><i class="fa-solid fa-right-from-bracket"></i>Log out</a> --}}
+
     </nav>
 </aside>
 

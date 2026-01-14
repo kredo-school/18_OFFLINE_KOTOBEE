@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use Illuminate\Http\Request;
 use App\Models\VocabQuestion;
 use Illuminate\Support\Facades\DB;
@@ -9,12 +10,12 @@ use Illuminate\Support\Str;
 
 class AdminVocabController extends Controller
 {
-    public function create()
+    public function create(Group $group)
     {
-        return view('admin.vocab_create');
+        return view('admin.vocab_create', compact('group'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Group $group)
     {
         $request->validate([
             'game_id' => 'required|integer|in:2,3',

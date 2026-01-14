@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\GrammarQuestion;
 use App\Models\GrammarQuestionBlock;
 use App\Models\GrammarWrongAnswer;
+use App\Models\Group;
 use Illuminate\Support\Facades\DB;
 
 class AdminGrammarController extends Controller
 {
-    public function create()
+    public function create(Group $group)
     {
-        return view('admin.grammar_create');
+        return view('admin.grammar_create', compact('group'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Group $group)
     {
         $request->validate([
             'questions' => 'required|array|size:5',
