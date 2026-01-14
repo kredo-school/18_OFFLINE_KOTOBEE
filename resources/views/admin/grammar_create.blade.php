@@ -105,7 +105,7 @@
         <p style="color:green">{{ session('success') }}</p>
     @endif
 
-    <form method="POST" action="{{ route('admin.grammar.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.grammar.store', ['group' => $group->id]) }}" enctype="multipart/form-data">
         @csrf
 
         <label>Game Type</label>
@@ -200,10 +200,10 @@
 
     function handleGameChange(select) {
         if (select.value == '3') {
-            window.location.href = "{{ route('admin.grammar.create') }}";
+            window.location.href = "{{ route('admin.grammar.create', ['group' => $group->id]) }}";
         }
         if (select.value == '2') {
-            window.location.href = "{{ route('admin.vocab.create') }}";
+            window.location.href = "{{ route('admin.vocab.create', ['group' => $group->id]) }}";
         }
     }
 </script>

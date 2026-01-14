@@ -1,15 +1,20 @@
 @extends('layouts.app')
 
+{{-- admin sidebar --}}
+@section('admin_sidebar')
+    @include('layouts.admin_side_bar')
+@endsection
+
 @push('styles')
     @vite('resources/css/groupstudent.css')
 @endpush
 
 @section('content')
+
 <div class="page-wrapper">
 
-   
-
     <div class="card-box">
+
         <h3 class="card-title">List of member</h3>
 
         <!-- 上部操作エリア -->
@@ -77,6 +82,9 @@
                 @endforeach
             </tbody>
         </table>
+
     </div>
+
 </div>
+
 @endsection
