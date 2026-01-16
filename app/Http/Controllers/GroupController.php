@@ -6,6 +6,7 @@ use App\Models\GameResult;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\GroupMember;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -55,10 +56,101 @@ class GroupController extends Controller
     }
 
     /**
+     * グループリスト画面表示
+     */
+    public function group_list()
+    {
+        $user = Auth::user();
+
+        //　エラー処理
+        abort_unless($user, 404);
+        abort_unless(Auth::user()->role === 2, 403);
+
+        $groups = $user->my_groups()
+            ->withCount([
+                'users as approved_members_count' => function ($q) {
+                    $q->where('group_members.status', 2);
+                }
+            ])
+            ->orderBy('created_at', 'asc')
+            ->get(['id', 'name', 'note', 'created_at']);
+        
+        // 全グループ合計
+        $current_members = $groups->sum('approved_members_count');
+
+        // 最新の有効な支払い
+        $payment = Payment::where('owner_id', $user->id)
+            ->where('payment_status', 'COMPLETED')
+            ->orderByDesc('paid_at')
+            ->first();
+
+        // 最大人数の設定
+        if ($payment?->plan_type === 1) {
+            $maximum_members = 20;
+        } elseif ($payment?->plan_type === 2) {
+            $maximum_members = 50;
+        } elseif ($payment?->plan_type === 3) {
+            $maximum_members = 100;
+        } else {
+            $maximum_members = null;
+        }
+
+        return view('groups.group_list', compact('groups', 'current_members', 'maximum_members', 'payment'));
+    }
+
+    /**
+     * ダッシュボードから追加のグループを作成する画面表示
+    */
+    public function create_show()
+    {
+        return view('groups.create_show');
+    }
+
+    /**
+     *  ダッシュボードからの追加のグループを保存
+    */
+    public function new_store(Request $request)
+    {
+        // ログインしているか
+        abort_unless(Auth::check(), 401);
+
+        // グループ管理者か
+        abort_unless(Auth::user()->role === 2, 403);
+
+        // バリデーション
+        $validated = $request->validate([
+            'name'   => ['required', 'string', 'max:12'],
+            'secret' => ['required', 'string', 'max:12'],
+            'note'   => ['required', 'string', 'max:255'],
+        ]);
+
+        // 保存
+        $group = Group::create([
+            'name'     => $validated['name'],
+            'secret'   => $validated['secret'],
+            'note'     => $validated['note'] ?? null,
+            'owner_id' => Auth::id(),
+        ]);
+
+        // 今のグループを切り替える
+        session(['current_group_id' => $group->id]);
+        
+        // ダッシュボードにリダイレクト
+        return redirect()
+            ->route('group.dashboard', ['group_id' => $group->id])
+            ->with('success', 'Group crated.');
+    }
+
+
+
+    /**
      * グループダッシュボード画面表示
      */
     public function show($id)
     {
+        // 現在のグループをsessionに保存
+        session(['current_group_id' => $id]);
+
         /***** カナゲーム用のグラフ作成 *****/
         $group = Group::with([
             'users' => function ($q) {
@@ -534,6 +626,44 @@ class GroupController extends Controller
         ]);
     }
 
+    /**
+     * 現在のプランの最大人数を取得するprivate関数
+     */
+    private function max_members_for_owner(int $owner_id): ?int
+    {       
+
+        $payment = Payment::where('owner_id', $owner_id)
+            ->where('payment_status', 'COMPLETED')
+            ->orderByDesc('paid_at')
+            ->first();
+
+        // dd($payment?->plan_type);
+
+        if ($payment?->plan_type === 1) {
+            return 20;
+        } elseif ($payment?->plan_type === 2) {
+            return 50;
+        } elseif ($payment?->plan_type === 3) {
+            return 100;
+        } else {
+            return null; // custom or no plan
+        }
+
+    }
+
+    /**
+     * グループ管理者がもつ全グループの人数を取得するprivate関数
+     */
+    private function current_approved_members_for_owner(int $owner_id): int
+    {
+        return DB::table('group_members')
+            ->join('groups', 'groups.id', 'group_members.group_id')
+            ->where([
+                ['groups.owner_id', $owner_id],
+                ['group_members.status', 2],
+            ])
+            ->count();
+    }
 
     /**
      * 参加申請者表示画面
@@ -557,6 +687,21 @@ class GroupController extends Controller
     {
         // グループadminが操作しているか
         abort_unless($group->owner_id === Auth::id(), 403);
+
+        $owner_id = $group->owner_id;
+
+        $max = $this->max_members_for_owner($owner_id);
+
+        // dd($max);
+
+        if ($max !== null) {
+            $current = $this->current_approved_members_for_owner($owner_id);
+
+            // すでにプランの上限なら参加不可
+            if ($current >= $max) {
+                return back()->with('error', "Member limit reached. ({$current}/{$max})");            
+            }            
+        }
 
         DB::table('group_members')
             ->where('group_id', $group->id)
@@ -587,12 +732,36 @@ class GroupController extends Controller
      */
     public function applicant_bulk_approval(Request $request, Group $group)
     {
+        // エラー処理
         abort_unless(Auth::check(), 401);
         abort_unless($group->owner_id === Auth::id(), 403);
 
         // user_idの配列作成
-        $user_ids = explode(',', $request->user_ids);
+        $user_ids = array_values(array_filter(explode(',', (string)$request->user_ids)));
 
+        // userが選択されていない時
+        if (count($user_ids) === 0) {
+            return back()->with('error', 'No users selected.');
+        }
+
+        $owner_id = $group->owner_id;
+
+        $max = $this->max_members_for_owner($owner_id);
+
+        if ($max !== null) {
+
+            $current = $this->current_approved_members_for_owner($owner_id);
+
+            // 一人でも超えたら拒否
+            if ($current + count($user_ids) > $max) {
+                return back()->with(
+                    'error',
+                    "Member limit would be exceeded. Current: {$current}, Selected: ".count($user_ids).", Max: {$max}."
+                );
+            }
+
+        }
+        
         DB::table('group_members')
             ->where('group_id', $group->id)
             ->whereIn('user_id', $user_ids)

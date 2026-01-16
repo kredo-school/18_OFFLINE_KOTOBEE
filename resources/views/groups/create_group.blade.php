@@ -89,6 +89,7 @@
                     Go to Group Dashboard
                 </a>
             @endif
+            
         </form>
 
     </div>

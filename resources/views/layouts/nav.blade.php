@@ -28,31 +28,29 @@
 
     <!-- Center -->
     <div class="kb-center">
-
         @auth
+
             @php
-
-                $approved_group = Auth::user()->approved_group();
-
+                $current_group_id = session('current_group_id');
+                $group = $current_group_id 
+                    ? \App\Models\Group::find($current_group_id)
+                    : null;
             @endphp
-
-            @if ($approved_group)
-
+    
+            @if ($group)
                 <span class="kb-group-name">
-
-                    {{ $approved_group->name }}
-
+                    {{ $group->name }}
                 </span>
-
             @endif
-            
-        @endauth
 
+        @endauth
     </div>
 
     <!-- Right -->
     <div class="kb-right">
+
         @auth
+            
             <!-- Avatar -->
             <a href="{{ route('profile')}}" class="kb-avatar-link">
                 @if (Auth::user()->avatar_url)
@@ -71,6 +69,7 @@
                     <summary class="kb-hamburger">☰</summary>
 
                     <div class="kb-menu-list">
+
                         @php
                             $alreadyAdmin = \App\Models\Group::where('owner_id', $user->id)->exists();
                             $alreadyPaid = \App\Models\Payment::where('owner_id', $user->id)->exists();
@@ -103,6 +102,7 @@
                               class="d-none">
                             @csrf
                         </form>
+
                     </div>
 
                 </details>
@@ -110,5 +110,7 @@
             </div>
 
         @endauth
+
     </div>
+
 </nav>
