@@ -133,6 +133,9 @@ Route::middleware(['auth'])->group(function () {
     /*** Create Group 画面 ***/
     Route::get('/group/create', [GroupController::class, 'create'])
         ->name('group.create');
+
+    /*** 送信（決済はまだ未実装）***/
+    Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
         
     Route::middleware(['group.owner'])->group(function () {
 
@@ -140,6 +143,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/group/dashboard/{group_id}', [GroupController::class, 'show'])
             ->name('group.dashboard');
 
+        /*** GroupAdmin グループリスト ***/
+        Route::get('/group/group_list', [GroupController::class, 'group_list'])
+            ->name('group.group_list');
+        
+        /*** GroupAdmin グループ作成 ***/
+        Route::get('/group/new_create/', [GroupController::class, 'create_show'])
+            ->name('group.create_show');
+
+        /*** GroupAdmin グループ保存 */
+        Route::post('/group/new_store', [GroupController::class, 'new_store'])
+            ->name('group.new_store');
+        
         /*** GroupAdmin 全生徒のプレイカウント画面 ***/
         Route::get('/group/{group_id}/playcount', [GroupController::class, 'playcount'])
             ->name('group.playcount');
@@ -211,9 +226,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('groups.destroy');
         
     });
-
-    // 送信（決済はまだ未実装）
-    Route::post('/group/store', [GroupController::class, 'store'])->name('group.store');
 
     // Step1: 支払い開始
     Route::get('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');

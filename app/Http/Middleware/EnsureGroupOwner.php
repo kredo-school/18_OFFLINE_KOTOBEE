@@ -16,14 +16,19 @@ class EnsureGroupOwner
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {       
-
+    {
+        abort_unless(Auth::check(), 401);
+        
         $param = $request->route('group') ?? $request->route('group_id');
+
+        if (is_null($param)) {
+            abort_unless(Auth::user()->role === 2, 403);
+            return $next($request);
+        }
 
         $group = $param instanceof Group ? $param : Group::find($param);
 
         abort_unless($group, 404);
-
         abort_unless($group->owner_id === Auth::id(), 403);
 
         return $next($request);

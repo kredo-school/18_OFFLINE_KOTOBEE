@@ -19,7 +19,9 @@ export default defineConfig({
                 'resources/js/kana_game_60s.js',
                 'resources/js/kana_game_timeattack.js',
                 'resources/js/streak.js',
-                'resources/js/vocab_result_modal.js',            
+                'resources/js/vocab_result_modal.js',   
+                'resources/css/style.css',
+                'resources/css/style_kana.css',      
 
                 'resources/css/app.css',
                 'resources/css/common.css',

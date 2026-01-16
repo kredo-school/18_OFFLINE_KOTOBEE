@@ -92,4 +92,16 @@ class User extends Authenticatable
             ->first();
     }
 
+    // 表示用のグループを返す
+    public function display_group()
+    {
+        $approved = $this->approved_group();
+        
+        if ($approved) return $approved;
+
+        // ownerとして作成したグループがあるなら最初の1件
+        return $this->my_groups()->orderBy('id')->first();
+    }
+
+
 }
