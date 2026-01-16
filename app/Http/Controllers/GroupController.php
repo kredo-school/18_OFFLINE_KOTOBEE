@@ -640,7 +640,7 @@ class GroupController extends Controller
         // dd($payment?->plan_type);
 
         if ($payment?->plan_type === 1) {
-            return 5;
+            return 20;
         } elseif ($payment?->plan_type === 2) {
             return 50;
         } elseif ($payment?->plan_type === 3) {
