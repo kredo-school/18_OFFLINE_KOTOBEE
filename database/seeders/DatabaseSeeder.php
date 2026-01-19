@@ -42,5 +42,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Grammar_QuestionsTableSeeder::class);
         $this->call(Grammar_Question_BlocksTableSeeder::class);
         $this->call(Grammar_Wrong_AnswersTableSeeder::class);
+
+        // BadgesTable登録用シーダー呼び出し
+        $this->call(BadgesTableSeeder::class);
     }
 }
