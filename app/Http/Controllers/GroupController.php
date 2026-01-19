@@ -703,10 +703,22 @@ class GroupController extends Controller
             }            
         }
 
-        DB::table('group_members')
-            ->where('group_id', $group->id)
-            ->where('user_id', $user->id)
-            ->update(['status' => 2]);
+        // DB::table('group_members')
+        //     ->where('group_id', $group->id)
+        //     ->where('user_id', $user->id)
+        //     ->update(['status' => 2]);
+
+        DB::transaction(function () use ($group, $user) {
+            DB::table('group_members')
+                ->where('group_id', $group->id)
+                ->where('user_id', $user->id)
+                ->update(['status' => 2]);
+    
+            // users.group_id を反映
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['group_id' => $group->id]);
+        });
 
         return back()->with('success', 'Approved.');
     }
@@ -762,10 +774,22 @@ class GroupController extends Controller
 
         }
         
-        DB::table('group_members')
-            ->where('group_id', $group->id)
-            ->whereIn('user_id', $user_ids)
-            ->update(['status' => 2]);
+        // DB::table('group_members')
+        //     ->where('group_id', $group->id)
+        //     ->whereIn('user_id', $user_ids)
+        //     ->update(['status' => 2]);
+
+        DB::transaction(function () use ($group, $user_ids) {
+            DB::table('group_members')
+                ->where('group_id', $group->id)
+                ->whereIn('user_id', $user_ids)
+                ->update(['status' => 2]);
+    
+            // users.group_id を一括反映
+            DB::table('users')
+                ->whereIn('id', $user_ids)
+                ->update(['group_id' => $group->id]);
+        });
 
         return back()->with('success', 'Selected users approved.');
     }

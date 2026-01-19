@@ -31,15 +31,25 @@
         @auth
 
             @php
-                $current_group_id = session('current_group_id');
-                $group = $current_group_id 
-                    ? \App\Models\Group::find($current_group_id)
-                    : null;
+                
+                $user = Auth::user();
+                $group_name = null;
+
+                // 学習者(1グループのみ)
+                if ($user->group_id) {
+                    $group_name = optional($user->group)->name;
+                } else { // 管理者(複数グループ保持可能)
+                    $current_group_id = session('current_group_id');
+                    $group_name = $current_group_id
+                        ? optional(\App\Models\Group::find($current_group_id))->name
+                        : null;
+                }
+
             @endphp
-    
-            @if ($group)
+
+            @if ($group_name)
                 <span class="kb-group-name">
-                    {{ $group->name }}
+                    {{ $group_name }}
                 </span>
             @endif
 

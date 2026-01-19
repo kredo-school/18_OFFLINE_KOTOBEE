@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     /*** grammarゲーム：ゲーム開始用API ***/
     Route::get('/api/grammar/start/{id}', [GrammarGameController::class, 'start'])
         ->name('grammar.start');
+    
     /*** grammarゲーム：ゲームスタート画面 ***/
     Route::get('/grammar/start_page/{stage_id}', [GrammarGameController::class, 'start_page'])
         ->name('grammar.start_page');
@@ -96,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
     /*** grammarゲーム：ゲーム画面表示用 ***/
     Route::get('/grammar/play/{stage_id}', [GrammarGameController::class, 'play'])
         ->name('grammar.play');
-
+    
     /*** grammarゲーム：ゲーム開始用API ***/
     Route::get('/api/grammar/start/{stage_id}', [GrammarGameController::class, 'start'])
         ->name('grammar.start');
