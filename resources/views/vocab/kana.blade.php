@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+@endpush
+
 @section('content')
 
 
@@ -26,7 +30,7 @@ console.log("session last_answer:", "{{ session('last_answer') }}");
 console.log("POST answer:", "{{ old('answer') }}");
 </script>
 
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
 
 <div class="game-wrapper">
 
