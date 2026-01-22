@@ -24,6 +24,11 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    {{-- 各ページ固有のviteファイルを読み込む --}}
+    @stack('styles')
+    
+    @stack('scripts')
+
 </head>
 
 <body>
@@ -44,10 +49,6 @@
 </body>
 
 
-{{-- 各ページ固有のviteファイルを読み込む --}}
-@stack('styles')
-  
-@stack('scripts')
 
 
 </html>

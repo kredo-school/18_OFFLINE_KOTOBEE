@@ -873,33 +873,22 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        // Owner check
         if ($group->owner_id !== auth()->id()) {
             abort(403);
         }
-
-        // Delete group and its members
         DB::transaction(function () use ($group) {
+            // users.group_id を NULL にする
+            \App\Models\User::where('group_id', $group->id)
+                ->update(['group_id' => null]);
+            // pivot削除
             GroupMember::where('group_id', $group->id)->delete();
+            // group削除
             $group->delete();
         });
-
-        // Check if the user still owns other groups
-        $nextGroup = Group::where('owner_id', auth()->id())
-            ->orderBy('created_at', 'asc') // or updated_at / id
-            ->first();
-
-        if ($nextGroup) {
-            // User still owns another group → redirect to its dashboard
-            return redirect()
-                ->route('group.dashboard', ['group_id' => $nextGroup->id])
-                ->with('success', 'The group has been deleted.');
-        }
-
-        // User owns no groups → redirect to Game Select
-        return redirect()
-            ->route('game.select')
-            ->with('success', 'The group has been deleted.');
+        $nextGroup = Group::where('owner_id', auth()->id())->first();
+        return $nextGroup
+            ? redirect()->route('group.dashboard', $nextGroup)->with('success', 'The group has been deleted.')
+            : redirect()->route('game.select')->with('success', 'The group has been deleted.');
     }
 
 }
